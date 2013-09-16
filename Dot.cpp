@@ -1,18 +1,51 @@
 #include "Dot.hpp"
 #include "engine/Shader.hpp"
 
+#include <iostream>
+
+using namespace std;
+
+std::ostream &operator<<(std::ostream &out, const glm::vec3 &vec) {
+
+	out << "{"
+		<< vec.x << ", " << vec.y << ", " << vec.z
+		<< "}";
+	
+	return out;
+}
+
 Dot::Dot(GLuint number, GLuint dotAmount, vec3 direction) :
 	number(number),
 	dotAmount(dotAmount),
 	direction(direction) {
 
-	position = direction;
-
 	shader = Shader::loadShaders("dot.vert", "dot.frag");
+	s_move = glGetUniformLocation(shader, "move");
+
+	GLuint A;
+	GLuint B = (dotAmount / 3) * 0.5;
+
+	if (number % (B * 2) == B) {
+		A = B;
+		move = 0;
+	}
+	else if (number % (B * 2) > B) {
+		A = B - (number % B);
+		move = 0;
+	}
+	else {
+		A = number % (B * 2);
+		move = 1;
+	}
+
+	position = (direction * start) + (direction * ((end / B) * A));
+	pos = (end / B ) * A;
 }
 
 void Dot::draw(GLuint time) {
 	glUseProgram(shader);
+
+	glUniform1i(s_move, move);
 
 	glBegin(GL_POINTS);
 		glVertex3f(position.x, position.y, position.z);
@@ -21,4 +54,29 @@ void Dot::draw(GLuint time) {
 
 void Dot::doPhysics(GLuint time) {
 
+	if (time - lastUpdate > 0.00001) {
+		vec3 startPoint = (direction * start);
+		GLuint B = (dotAmount / 3) * 0.5;
+		float v = 0.05;
+
+		if (move) {
+			pos = pos + v;
+		}
+		else {
+			pos = pos - v;
+		}
+
+		if (pos >= end) {
+			pos  = end;
+			move = 0;
+		}
+		if (pos <= 0) {
+			pos  = 0;
+			move = 1;
+		}
+
+		position = startPoint + (direction * ((end / B) * pos));
+	}
+
+	lastUpdate = time;
 }

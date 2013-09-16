@@ -6,7 +6,7 @@
 
 
 int main(int argc, char**argv) {
-	Engine engine("dotdemo", 1024, 768);
+	Engine engine("dotdemo", 1024, 1024);
 
 	Demo *demo =  new Demo();
 
@@ -16,6 +16,6 @@ int main(int argc, char**argv) {
 	);
 
 
-	engine.toggleDebugCamera();
+	//engine.toggleDebugCamera();
 	engine.run();
 }
