@@ -3,15 +3,27 @@
 
 varying vec3 position;
 
+varying float pointSize;
+
 uniform int move;
 
 void main() {
-	vec2 distance = gl_PointCoord.xy - position.xy;
+	vec2 distance = gl_PointCoord.st;
 
-	if (move == 1) {
+	distance.s = abs(0.5 - distance.s);
+	distance.t = abs(0.5 - distance.t);
+	
+	gl_FragColor = vec4(1.0, 0.0, 0.0, 1 - 2 * length(distance));
+
+	/*
+	if (length(distance) > 0.2) {
+		gl_FragColor = vec4(0.0, 1.0, 0.0, 1.0);
+	}
+	else if (move == 1) {
 		gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
 	}
 	else {
 		gl_FragColor = vec4(0.0, 0.0, 1.0, 1.0);
 	}
+	*/
 }

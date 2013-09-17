@@ -66,6 +66,7 @@ void Dot::doPhysics(GLuint time) {
 			pos = pos - v;
 		}
 
+		// Swap direction
 		if (pos >= end) {
 			pos  = end;
 			move = 0;
