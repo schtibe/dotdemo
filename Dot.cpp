@@ -21,6 +21,9 @@ Dot::Dot(GLuint number, GLuint dotAmount, vec3 direction) :
 
 	shader = Shader::loadShaders("dot.vert", "dot.frag");
 	s_move = glGetUniformLocation(shader, "move");
+	s_time = glGetUniformLocation(shader, "time");
+	s_number = glGetUniformLocation(shader, "number");
+	s_amount = glGetUniformLocation(shader, "amount");
 
 	GLuint A;
 	GLuint B = (dotAmount / 3) * 0.5;
@@ -46,6 +49,9 @@ void Dot::draw(GLuint time) {
 	glUseProgram(shader);
 
 	glUniform1i(s_move, move);
+	glUniform1i(s_time, time);
+	glUniform1i(s_number, number);
+	glUniform1i(s_amount, dotAmount);
 
 	glBegin(GL_POINTS);
 		glVertex3f(position.x, position.y, position.z);

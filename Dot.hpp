@@ -26,6 +26,9 @@ class Dot : public DrawObject {
 
 		GLuint shader;
 		GLuint s_move;
+		GLuint s_time;
+		GLuint s_number;
+		GLuint s_amount;
 
 		GLuint arms = 3;
 		GLfloat start = 1;
