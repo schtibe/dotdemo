@@ -2,12 +2,9 @@ import os
 
 libs = [
 	'SDL',
-	'SDL_image',
 	'GL',
 	'GLU',
-	'ftgl',
 	'boost_system',
-	'tinyxml',
 	'GLEW'
 ]
 
@@ -23,11 +20,10 @@ file_list = [
 flags = [
 	'-std=c++0x',
 	'-Wall',
-	'-isystem/usr/include/freetype2',
-	'-isystem/usr/include/eigen3',
+	#'-isystem/usr/include/freetype2',
 	#'-O3',
 	#'-mtune=native',
-	'-g'
+	#'-g'
 	]
 
 # this is a little hack to use the path variable of

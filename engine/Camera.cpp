@@ -18,37 +18,37 @@ Camera::Camera(GLint screenWidth, GLint screenHeight)
 		// init
 		: screenWidth    (screenWidth),
 			screenHeight (screenHeight),
-			position     (Vector3f(0.0, 0.0, 1.0)),
-			view         (Vector3f(0.0, 1.0, 0.0)),
-			upVector     (Vector3f(0.0, 1.0, 0.0))
+			position     (vec3(0.0, 0.0, 1.0)),
+			view         (vec3(0.0, 1.0, 0.0)),
+			upVector     (vec3(0.0, 1.0, 0.0))
 {
 }
 
 /**
  * Return the position vector
  */
-Vector3f Camera::getPosition() {
+vec3 Camera::getPosition() {
 	return position;
 }
 
 /**
  * Return the view vector
  */
-Vector3f Camera::getView() {
+vec3 Camera::getView() {
 	return view;
 }
 
 /**
  * Return the up vector
  */
-Vector3f Camera::getUpVector() {
+vec3 Camera::getUpVector() {
 	return upVector;
 }
 
 /**
  * Return the strafe vector
  */
-Vector3f Camera::getStrafe() {
+vec3 Camera::getStrafe() {
 	return strafe;
 }
 
@@ -68,22 +68,22 @@ void Camera::positionCamera(
 		GLfloat upVectorZ
 	)
 {
-	this->position = Vector3f(positionX, positionY, positionZ);
-	this->view     = Vector3f(viewX, viewY, viewZ);
-	this->upVector = Vector3f(upVectorX, upVectorY, upVectorZ);
+	this->position = vec3(positionX, positionY, positionZ);
+	this->view     = vec3(viewX, viewY, viewZ);
+	this->upVector = vec3(upVectorX, upVectorY, upVectorZ);
 
-	Vector3f direction = view - position;
-	strafe = direction.cross(upVector);
-	strafe.normalize();
+	vec3 direction = view - position;
+	strafe = cross(direction, upVector);
+	strafe = normalize(strafe);
 }
 
 /**
  * Change the position, view and up vector of the camera
  */
 void Camera::positionCamera(
-		Vector3f position,
-		Vector3f view,
-		Vector3f upVector
+		vec3 position,
+		vec3 view,
+		vec3 upVector
 ) {
 	this->position = position;
 	this->view     = view;
@@ -95,25 +95,25 @@ void Camera::positionCamera(
  * Rotate the camera's view around the position
  */
 void Camera::rotateView(GLfloat angle, GLfloat x, GLfloat y, GLfloat z) {
-	Vector3f newView;
+	vec3 newView;
 
 	// the new direction we are facing
-	Vector3f dir = view - position;
+	vec3 dir = view - position;
 
 	GLfloat cosTheta = (GLfloat)cos(angle);
 	GLfloat sinTheta = (GLfloat)sin(angle);
 
-	newView.x()  = (cosTheta + (1 - cosTheta) * x * x) * dir.x();
-	newView.x() += ((1 - cosTheta) * x * y - z * sinTheta) * dir.y();
-	newView.x() += ((1 - cosTheta) * x * z + y * sinTheta) * dir.z();
+	newView.x  = (cosTheta + (1 - cosTheta) * x * x) * dir.x;
+	newView.x += ((1 - cosTheta) * x * y - z * sinTheta) * dir.y;
+	newView.x += ((1 - cosTheta) * x * z + y * sinTheta) * dir.z;
 
-	newView.y()  = ((1 - cosTheta) * x * y + z * sinTheta) * dir.x();
-	newView.y() += (cosTheta + (1 - cosTheta) * y * y) * dir.y();
-	newView.y() += ((1 - cosTheta) * y * z - x * sinTheta) * dir.z();
+	newView.y  = ((1 - cosTheta) * x * y + z * sinTheta) * dir.x;
+	newView.y += (cosTheta + (1 - cosTheta) * y * y) * dir.y;
+	newView.y += ((1 - cosTheta) * y * z - x * sinTheta) * dir.z;
 
-	newView.z()  = ((1 - cosTheta) * x * z - y * sinTheta) * dir.x();
-	newView.z() += ((1 - cosTheta) * y * z + x * sinTheta) * dir.y();
-	newView.z() += (cosTheta + (1 - cosTheta) * z * z) * dir.z();
+	newView.z  = ((1 - cosTheta) * x * z - y * sinTheta) * dir.x;
+	newView.z += ((1 - cosTheta) * y * z + x * sinTheta) * dir.y;
+	newView.z += (cosTheta + (1 - cosTheta) * z * z) * dir.z;
 
 	// Now we just add the newly rotated vector to our position to set
 	// our new rotated view of our camera.
@@ -155,11 +155,11 @@ void Camera::setViewByMouse(GLint mouseX, GLint mouseY) {
 		// To find the axis we need to rotate around for up and down
 		// movements, we need to get a perpendicular vector from the
 		// camera's view vector and up vector.  This will be the axis.
-		Vector3f vAxis = (view - position).cross(upVector);
-		vAxis.normalize();
+		vec3 vAxis = cross(view - position, upVector);
+		vAxis = normalize(vAxis);
 
 		// Rotate around our perpendicular axis and along the y-axis
-		rotateView(angleZ, vAxis.x(), vAxis.y(), vAxis.z());
+		rotateView(angleZ, vAxis.x, vAxis.y, vAxis.z);
 		rotateView(angleY, 0, 1, 0);
 	}
 
@@ -172,14 +172,14 @@ void Camera::setViewByMouse(GLint mouseX, GLint mouseY) {
  */
 void Camera::strafeCamera(GLfloat speed) {
 	// Add the strafe vector to our position
-	position.x() += strafe.x() * speed;
-	position.y() += strafe.y() * speed;
-	position.z() += strafe.z() * speed;
+	position.x += strafe.x * speed;
+	position.y += strafe.y * speed;
+	position.z += strafe.z * speed;
 
 	// Add the strafe vector to our view
-	view.x() += strafe.x() * speed;
-	view.y() += strafe.y() * speed;
-	view.z() += strafe.z() * speed;
+	view.x += strafe.x * speed;
+	view.y += strafe.y * speed;
+	view.z += strafe.z * speed;
 }
 
 /**
@@ -187,29 +187,29 @@ void Camera::strafeCamera(GLfloat speed) {
  */
 void Camera::moveCamera(GLfloat speed) {
 	// get the current direction we are looking
-	Vector3f vector = view - position;
+	vec3 vector = view - position;
 
 	// normalize to not move faster than the strafe
-	vector.normalize();
+	vector = normalize(vector);
 
 	// update position
-	position.x() += vector.x() * speed;
-	position.y() += vector.y() * speed;
-	position.z() += vector.z() * speed;
+	position.x += vector.x * speed;
+	position.y += vector.y * speed;
+	position.z += vector.z * speed;
 
 	// update view
-	view.x() += vector.x() * speed;
-	view.y() += vector.y() * speed;
-	view.z() += vector.z() * speed;
+	view.x += vector.x * speed;
+	view.y += vector.y * speed;
+	view.z += vector.z * speed;
 }
 
 /**
  * This updates the camera's view and other data (Should be called each frame)
  */
 void Camera::update(GLint mouseX, GLint mouseY) {
-	Vector3f direction = view - position;
-	strafe = direction.cross(upVector);
-	strafe.normalize();
+	vec3 direction = view - position;
+	strafe = cross(direction, upVector);
+	strafe  = normalize(strafe);
 
 	// Move the camera's view by the mouse
 	setViewByMouse(mouseX, mouseY);
@@ -222,15 +222,15 @@ void Camera::update(GLint mouseX, GLint mouseY) {
  */
 void Camera::look() {
 	gluLookAt(
-		position.x(),
-		position.y(),
-		position.z(),
-		view.x(),
-		view.y(),
-		view.z(),
-		upVector.x(),
-		upVector.y(),
-		upVector.z()
+		position.x,
+		position.y,
+		position.z,
+		view.x,
+		view.y,
+		view.z,
+		upVector.x,
+		upVector.y,
+		upVector.z
 	);
 }
 

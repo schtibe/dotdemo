@@ -10,12 +10,9 @@
 #include <GL/gl.h>
 #include <GL/glx.h>
 #include <GL/glu.h>
+#include <glm/glm.hpp>
 
-#undef Success
-
-#include <Eigen/Geometry>
-
-using namespace Eigen;
+using namespace glm;
 
 // This is our camera class
 class Camera {
@@ -23,10 +20,10 @@ class Camera {
 		Camera();
 		Camera(GLint screenWidth, GLint screenHeight);
 
-		Vector3f getPosition();
-		Vector3f getView();
-		Vector3f getUpVector();
-		Vector3f getStrafe();
+		vec3 getPosition();
+		vec3 getView();
+		vec3 getUpVector();
+		vec3 getStrafe();
 
 		void positionCamera(
 				GLfloat positionX,
@@ -41,9 +38,9 @@ class Camera {
 		);
 
 		void positionCamera(
-				Vector3f position,
-				Vector3f view,
-				Vector3f upVector
+				vec3 position,
+				vec3 view,
+				vec3 upVector
 		);
 
 		void rotateView(GLfloat angle, GLfloat x, GLfloat y, GLfloat z);
@@ -62,22 +59,22 @@ class Camera {
 		/**
 		 * The camera's position
 		 */
-		Vector3f position;
+		vec3 position;
 
 		/**
 		 * The camera's view
 		 */
-		Vector3f view;
+		vec3 view;
 
 		/**
 		 * The camera's up vector
 		 */
-		Vector3f upVector;
+		vec3 upVector;
 
 		/**
 		 * The camera's strafe vector
 		 */
-		Vector3f strafe;
+		vec3 strafe;
 };
 
 

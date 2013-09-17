@@ -6,7 +6,6 @@ varying vec3 position;
 uniform int move;
 
 void main() {
-
 	vec2 distance = gl_PointCoord.xy - position.xy;
 
 	if (move == 1) {
