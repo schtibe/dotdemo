@@ -17,7 +17,6 @@ uniform int amount;
  * Hue is in the range [0.0, 1.0] instead of degrees or radians.
  * Alpha is simply passed through for convenience.
  */
- 
 vec4 hsv_to_rgb(float h, float s, float v, float a) {
 	float c = v * s;
 	h = mod((h * 6.0), 6.0);
@@ -53,6 +52,9 @@ void main() {
 
 	float step = 1.0 / amount;
 	float hue = number * step;
+
+	hue -= time * 0.0001;
+
 	vec4 color = hsv_to_rgb(hue, 1, 1, 1);
 	
 	float alpha = 1 - (2 * length(distance));
@@ -60,16 +62,4 @@ void main() {
 		discard;
 	}
 	gl_FragColor = vec4(color.xyz, alpha);
-
-	/*
-	if (length(distance) > 0.2) {
-		gl_FragColor = vec4(0.0, 1.0, 0.0, 1.0);
-	}
-	else if (move == 1) {
-		gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
-	}
-	else {
-		gl_FragColor = vec4(0.0, 0.0, 1.0, 1.0);
-	}
-	*/
 }
