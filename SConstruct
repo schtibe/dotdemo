@@ -21,8 +21,8 @@ flags = [
 	'-std=c++0x',
 	'-Wall',
 	#'-isystem/usr/include/freetype2',
-	#'-O3',
-	#'-mtune=native',
+	'-O3',
+	'-mtune=native',
 	#'-g'
 	]
 
