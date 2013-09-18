@@ -19,13 +19,9 @@ using boost::container::vector;
 using boost::lexical_cast;
 
 
-
-GLuint Shader::loadShaders(string vertexShaderFile, string fragmentShaderFile) {
+GLuint Shader::generateShaders(string vertexShader, string fragmentShader) {
 	GLuint vertexShaderID   = glCreateShader(GL_VERTEX_SHADER);
 	GLuint fragmentShaderID = glCreateShader(GL_FRAGMENT_SHADER);
-
-	string vertexShader   = loadShaderFile(vertexShaderFile);
-	string fragmentShader = loadShaderFile(fragmentShaderFile);
 
 	try {
 		compileShader(vertexShaderID, vertexShader);
@@ -34,11 +30,11 @@ GLuint Shader::loadShaders(string vertexShaderFile, string fragmentShaderFile) {
 	catch (logic_error &err) {
 		std::cout <<  vertexShader << std::endl;
 		throw logic_error(
-				"Shader \"" + vertexShaderFile + "\" compilation error: " +
-				string(err.what())
+			"Shader compilation error:" +
+			string(err.what())
 		);
-
 	}
+
 
 	GLuint programID = glCreateProgram();
 	glAttachShader(programID, vertexShaderID);
@@ -58,6 +54,24 @@ GLuint Shader::loadShaders(string vertexShaderFile, string fragmentShaderFile) {
 	glDeleteShader(fragmentShaderID);
 
 	return programID;
+}
+
+
+GLuint Shader::loadShaders(string vertexShaderFile, string fragmentShaderFile) {
+	string vertexShader   = loadShaderFile(vertexShaderFile);
+	string fragmentShader = loadShaderFile(fragmentShaderFile);
+
+	try {
+		return generateShaders(vertexShader, fragmentShader);
+	}
+	catch (logic_error &err) {
+		std::cout <<  vertexShader << std::endl;
+		throw logic_error(
+				"Shader \"" + vertexShaderFile + "\" compilation error: " +
+				string(err.what())
+		);
+
+	}
 }
 
 /**

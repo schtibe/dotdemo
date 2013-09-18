@@ -12,6 +12,7 @@ using std::logic_error;
 class Shader {
 	public:
 		static GLuint loadShaders(string vertexShaderFile, string fragmentShaderFile);
+		static GLuint generateShaders(string vertexShader, string fragmentShader);
 
 	private:
 		static string loadShaderFile(string file);
