@@ -63,13 +63,29 @@ void Dot::doPhysics(GLuint time) {
 	if (time - lastUpdate > 0.00001) {
 		vec3 startPoint = (direction * start);
 		GLuint B = (dotAmount / 3) * 0.5;
-		float v = 0.05;
+		//float v = 0.05;
+
+		if (number == 0) {
 
 		if (move) {
 			pos = pos + v;
+			if (pos < end / 2) {
+				v += 0.001;
+			}
+			else {
+				cout << v << endl;
+				v -= 0.001;
+			}
 		}
 		else {
 			pos = pos - v;
+
+			if (pos < end / 2) {
+				v -= 0.001;
+			}
+			else {
+				v += 0.001;
+			}
 		}
 
 		// Swap direction
@@ -83,6 +99,7 @@ void Dot::doPhysics(GLuint time) {
 		}
 
 		position = startPoint + (direction * ((end / B) * pos));
+		}
 	}
 
 	lastUpdate = time;

@@ -39,6 +39,7 @@ class Dot : public DrawObject {
 		// 1 = outwards
 		// 0 = inwards
 		GLuint move;
+		GLfloat v = 0.0;
 
 		GLuint lastUpdate;
 };
