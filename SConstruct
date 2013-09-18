@@ -1,4 +1,6 @@
 import os
+import sys
+
 
 libs = [
 	'SDL',
@@ -17,14 +19,17 @@ file_list = [
 	'Demo.cpp',
 	'Dot.cpp'
 ]
+
 flags = [
 	'-std=c++0x',
 	'-Wall',
-	#'-isystem/usr/include/freetype2',
-	'-O3',
-	'-mtune=native',
-	#'-g'
-	]
+]
+
+if len(sys.argv) > 1:
+	if sys.argv[1] == 'debug':
+		flags.extend(['-g'])
+else:
+	flags.extend(['-O3', '-mtune=native'])
 
 # this is a little hack to use the path variable of
 # the user. I do this so the gcc wrapper colorgcc is used.
@@ -34,14 +39,7 @@ env = {
 	'HOME' : os.environ['HOME']
 }
 
-debug_env = Environment( ENV = env)
-debug_env.AppendUnique(CCFLAGS=flags)
-debug_env.Program('dotdemo', file_list, LIBS=libs)
+env = Environment( ENV = env)
+env.AppendUnique(CCFLAGS=flags)
+env.Program('dotdemo', file_list, LIBS=libs)
 
-
-
-#release_env = Environment(ENV = env)
-#release_env.AppendUnique(CCFLAGS=flags + ['-03'])
-#release_env.Program('boardball', file_list, LIBS=libs)
-#
-#Default(release_env)
