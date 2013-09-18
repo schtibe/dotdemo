@@ -25,9 +25,8 @@ flags = [
 	'-Wall',
 ]
 
-if len(sys.argv) > 1:
-	if sys.argv[1] == 'debug':
-		flags.extend(['-g'])
+if ARGUMENTS.get('debug', 0):
+	flags.extend(['-g'])
 else:
 	flags.extend(['-O3', '-mtune=native'])
 
