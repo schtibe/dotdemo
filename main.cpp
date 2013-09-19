@@ -16,6 +16,6 @@ int main(int argc, char**argv) {
 	);
 
 
-	engine.toggleDebugCamera();
+	//engine.toggleDebugCamera();
 	engine.run();
 }

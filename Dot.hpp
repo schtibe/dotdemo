@@ -40,8 +40,10 @@ class Dot : public DrawObject {
 		// 0 = inwards
 		GLuint move;
 		GLfloat v = 0.0;
+		GLfloat acc = 0.0000005;
 
 		GLuint lastUpdate;
+		GLuint zeroTime = 0;
 };
 
 
