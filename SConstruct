@@ -25,8 +25,13 @@ flags = [
 	'-Wall',
 ]
 
+vars = Variables()
+vars.Add('O_SIZE', 'Set to 1 to optimize for size', 0)
+
 if ARGUMENTS.get('debug', 0):
 	flags.extend(['-g'])
+elif ARGUMENTS.get('oSize', 0):
+	flags.extend(['-Os', '-fomit-frame-pointer'])
 else:
 	flags.extend(['-O3', '-mtune=native'])
 
@@ -38,7 +43,11 @@ env = {
 	'HOME' : os.environ['HOME']
 }
 
-env = Environment( ENV = env)
+env = Environment( 
+	ENV = env,
+	variables=vars,
+	CPPDEFINES={'O_SIZE': '${O_SIZE}'}
+)
 env.AppendUnique(CCFLAGS=flags)
 env.Program('dotdemo', file_list, LIBS=libs)
 
