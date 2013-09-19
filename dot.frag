@@ -4,7 +4,6 @@
 varying vec3 position;
 varying float pointSize;
 
-uniform int move;
 uniform int number;
 uniform int time;
 uniform int amount;
