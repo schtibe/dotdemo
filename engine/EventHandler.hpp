@@ -1,12 +1,13 @@
 #ifndef __EVENT_HANDLER_H
 #define __EVENT_HANDLER_H
 
-
-#define GL_GLEXT_PROTOTYPES
-#include <GL/gl.h>
-#include <GL/glx.h>
-#include <SDL/SDL.h>
+#include <SDL2/SDL.h>
 #include <boost/function.hpp>
+#include <map>
+#include <boost/container/map.hpp>
+
+//using std::map;
+using boost::container::map;
 
 typedef boost::function<void (SDL_Event&)> callback;
 
@@ -21,35 +22,35 @@ class EventHandler {
 		void registerQuitCallback(callback);
 
 
-		void registerKey(SDLKey key        , callback);
-		void registerKeyOnce(SDLKey key    , callback);
-		void registerKeyRelease(SDLKey key , callback);
+		void registerKey(SDL_Keycode key        , callback);
+		void registerKeyOnce(SDL_Keycode key    , callback);
+		void registerKeyRelease(SDL_Keycode key , callback);
 
-		void unregisterKey(SDLKey key);
+		void unregisterKey(SDL_Keycode key);
 
 		void unregisterMouseMotion();
 
 
 	private:
-		static const GLuint sdlKeyAmount = 323;
+		static const unsigned int sdlKeyAmount = 1000;
 
 		SDL_Event event;
 
 		void actualHandle(SDL_Event &);
 		void handleKeys(SDL_Event &event);
 		void cycle();
-		void keyDown(SDLKey &);
-		void keyUp(SDLKey &);
+		void keyDown(SDL_Keycode &);
+		void keyUp(SDL_Keycode &);
 
-		bool keysHeld[sdlKeyAmount];
+		map<SDL_Keycode, bool> keysHeld;
 
 		callback videoResize;
 		callback mouseMotion;
 		callback quit;
 
-		callback keyFunc[sdlKeyAmount];
-		callback keyReleaseFunc[sdlKeyAmount];
-		callback keyFuncOnce[sdlKeyAmount];
+		map<SDL_Keycode, callback> keyFunc;
+		map<SDL_Keycode, callback> keyReleaseFunc;
+		map<SDL_Keycode, callback> keyFuncOnce;
 
 
 };

@@ -3,7 +3,7 @@ import sys
 
 
 libs = [
-	'SDL',
+	'SDL2',
 	'GL',
 	'GLU',
 	'boost_system',

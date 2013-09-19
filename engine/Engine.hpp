@@ -5,6 +5,7 @@
 
 #include <GL/gl.h>
 #include <GL/glx.h>
+#include <SDL2/SDL.h>
 #include <string>
 
 
@@ -73,14 +74,12 @@ class Engine {
 		void cameraLeftMovement(SDL_Event &event);
 		void cameraRightMovement(SDL_Event &event);
 
-		SDL_Surface *screen;
+		SDL_Window *window;
 
 		void handleErrors();
 
 		bool debugCameraActive       = false;
 		GLfloat cameraSpeed          = 0.5;
-
-		void renderOrigin();
 
 		render_func renderFunc;
 

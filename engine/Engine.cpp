@@ -3,7 +3,7 @@
 #include <iostream>
 #include <boost/bind.hpp>
 #include <GL/glu.h>
-#include <SDL/SDL.h>
+#include <SDL2/SDL.h>
 
 
 /*
@@ -49,15 +49,12 @@ void Engine::render() {
 
 	cam.look();
 
-	renderOrigin();
-
 	evHandler.handle();
 	renderFunc(currentTime, *this);
 
 	fps(currentTime);
 
-	SDL_GL_SwapBuffers();
-
+	SDL_GL_SwapWindow(window);
 }
 
 void Engine::drawObject(DrawObject &obj) {
@@ -98,13 +95,28 @@ void Engine::run() {
  * @TODO Probably make exceptions instead of return values
  */
 void Engine::initSDL(string name) {
+
+	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS);
+
+	window = SDL_CreateWindow(
+			name.c_str(), 
+			SDL_WINDOWPOS_CENTERED,
+			SDL_WINDOWPOS_CENTERED,
+			scrW,
+			scrH,
+			SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL
+	);
+
+	SDL_GL_CreateContext(window);
+	atexit(SDL_Quit);
+
+	/*
 	SDL_WM_SetCaption(name.c_str(), name.c_str());
 
 	if (SDL_Init(SDL_INIT_VIDEO) == -1) {
 		//cout << "Can't init SDL: " << SDL_GetError() << endl;
 		//return -1;
 	}
-	atexit(SDL_Quit);
 	
 	screen = SDL_SetVideoMode(scrW, scrH, clrDepth, SDL_OPENGL | SDL_RESIZABLE);
 
@@ -113,9 +125,8 @@ void Engine::initSDL(string name) {
 		//return -1;
 	}
 
-	SDL_EnableUNICODE(true);
-
 	//return 1;
+	*/
 }
 
 
@@ -221,14 +232,8 @@ void Engine::cameraRightMovement(SDL_Event &event) {
  * Resize event
  */
 void Engine::videoResize(SDL_Event &event) {
-	screen = SDL_SetVideoMode(
-			event.resize.w,
-			event.resize.h,
-			clrDepth,
-			SDL_OPENGL | SDL_RESIZABLE
-	);
-	scrH = event.resize.h;
-	scrW = event.resize.w;
+	scrH = event.window.data1;
+	scrW = event.window.data2;
 
 	cam.windowResize(scrH, scrW);
 }
@@ -255,42 +260,3 @@ void Engine::handleErrors() {
 	}
 }
 
-void Engine::renderOrigin() {
-	/*
-	glPushMatrix();
-	glLineWidth(4);
-
-	GLfloat red[]   = {1.0, 0.0, 0.0, 1.0};
-	GLfloat green[] = {0.0, 1.0, 0.0, 1.0};
-	GLfloat blue[]  = {0.0, 0.0, 1.0, 1.0};
-
-	glMaterialfv(GL_FRONT, GL_DIFFUSE,  red);
-	glMaterialfv(GL_FRONT, GL_AMBIENT,  red);
-	glMaterialfv(GL_FRONT, GL_SPECULAR, red);
-
-	glBegin(GL_LINES);
-		glVertex3f(0.0f, 0.0f, 0.0f);
-		glVertex3f(1.0f, 0.0f, 0.0f);
-	glEnd();
-
-	glMaterialfv(GL_FRONT, GL_DIFFUSE,  green);
-	glMaterialfv(GL_FRONT, GL_AMBIENT,  green);
-	glMaterialfv(GL_FRONT, GL_SPECULAR, green);
-
-	glBegin(GL_LINES);
-		glVertex3f(0.0f, 0.0f, 0.0f);
-		glVertex3f(0.0f, 1.0f, 0.0f);
-	glEnd();
-
-	glMaterialfv(GL_FRONT, GL_DIFFUSE,  blue);
-	glMaterialfv(GL_FRONT, GL_AMBIENT,  blue);
-	glMaterialfv(GL_FRONT, GL_SPECULAR, blue);
-
-	glBegin(GL_LINES);
-		glVertex3f(0.0f, 0.0f, 0.0f);
-		glVertex3f(0.0f, 0.0f, 1.0f);
-	glEnd();
-
-	glPopMatrix();
-	*/
-}

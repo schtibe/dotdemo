@@ -164,7 +164,7 @@ void Camera::setViewByMouse(GLint mouseX, GLint mouseY) {
 	}
 
 	// Set the mouse position to the middle of our window
-	SDL_WarpMouse(middleX, middleY);
+	//SDL_WarpMouse(middleX, middleY);
 }
 
 /**
