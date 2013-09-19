@@ -25,7 +25,6 @@ class Dot : public DrawObject {
 		vec3 position;
 
 		GLuint shader;
-		GLuint s_move;
 		GLuint s_time;
 		GLuint s_number;
 		GLuint s_amount;
@@ -38,7 +37,6 @@ class Dot : public DrawObject {
 		// the direction to move
 		// 1 = outwards
 		// 0 = inwards
-		GLuint move;
 		GLfloat v = 0.0;
 		GLfloat acc = 0.0000005;
 
