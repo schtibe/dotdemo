@@ -109,24 +109,6 @@ void Engine::initSDL(string name) {
 
 	SDL_GL_CreateContext(window);
 	atexit(SDL_Quit);
-
-	/*
-	SDL_WM_SetCaption(name.c_str(), name.c_str());
-
-	if (SDL_Init(SDL_INIT_VIDEO) == -1) {
-		//cout << "Can't init SDL: " << SDL_GetError() << endl;
-		//return -1;
-	}
-	
-	screen = SDL_SetVideoMode(scrW, scrH, clrDepth, SDL_OPENGL | SDL_RESIZABLE);
-
-	if (screen == NULL) {
-		//cout << "Can't set video mode: " << SDL_GetError() << endl;
-		//return -1;
-	}
-
-	//return 1;
-	*/
 }
 
 

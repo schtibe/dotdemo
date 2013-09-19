@@ -61,7 +61,6 @@ class Engine {
 		void initSDL(string name);
 		void initOpenGL();
 		void initEvents();
-		void lighting();
 
 		void render();
 
