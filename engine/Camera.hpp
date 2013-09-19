@@ -5,7 +5,6 @@
 // without having to cut and paste code.  This file and camera.cpp should be
 // added to your project.
 #include <cmath>
-#include <SDL/SDL.h>
 #define GL_GLEXT_PROTOTYPES
 #include <GL/gl.h>
 #include <GL/glx.h>

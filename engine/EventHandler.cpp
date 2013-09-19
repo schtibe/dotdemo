@@ -13,7 +13,7 @@
  * Construct
  */
 EventHandler::EventHandler() {
-	std::fill_n(keysHeld, sdlKeyAmount, false);
+	//std::fill_n(keysHeld, sdlKeyAmount, false);
 }
 
 
@@ -23,13 +23,15 @@ EventHandler::EventHandler() {
 void EventHandler::handle() {
 	while (SDL_PollEvent(&event)) {
 		switch (event.type) {
-			case SDL_VIDEORESIZE:
-				if (videoResize) {
-					videoResize(event);
+			case SDL_WINDOWEVENT:
+				if (event.window.event == SDL_WINDOWEVENT_RESIZED) {
+					if (videoResize) {
+						videoResize(event);
+					}
+					break;
 				}
-				break;
 			case SDL_QUIT:
-				quit(event);
+				//quit(event);
 				break;
 			case SDL_KEYDOWN:
 				keyDown(event.key.keysym.sym);
@@ -72,10 +74,12 @@ void EventHandler::registerQuitCallback(callback func) {
 /**
  * Trigger the func on a key once
  */
-void EventHandler::keyDown(SDLKey &key) {
-	if (!keysHeld[key]) {
-		if (keyFuncOnce[key]) {
-			keyFuncOnce[key](event);
+void EventHandler::keyDown(SDL_Keycode &key) {
+	if (keysHeld.find(key) != keysHeld.end()) {
+		if (!keysHeld[key]) {
+			if (keyFuncOnce[key]) {
+				keyFuncOnce[key](event);
+			}
 		}
 	}
 }
@@ -83,7 +87,7 @@ void EventHandler::keyDown(SDLKey &key) {
 /**
  * When a key is released, call the release function
  */
-void EventHandler::keyUp(SDLKey &key) {
+void EventHandler::keyUp(SDL_Keycode &key) {
 	if (keyReleaseFunc[key]) {
 		keyReleaseFunc[key](event);
 	}
@@ -93,7 +97,7 @@ void EventHandler::keyUp(SDLKey &key) {
  * When a key is held, call the associated function (if set)
  */
 void EventHandler::cycle() {
-	for (GLuint i = 0; i < sdlKeyAmount; i++) {
+	for (unsigned int i = 0; i < sdlKeyAmount; i++) {
 		if (keysHeld[i]) {
 			if (keyFunc[i]) {
 				keyFunc[i](event);
@@ -103,24 +107,25 @@ void EventHandler::cycle() {
 }
 
 
+
 /**
  * Register a key to the list
  */
-void EventHandler::registerKey(SDLKey key, callback func) {
+void EventHandler::registerKey(SDL_Keycode key, callback func) {
 	keyFunc[key] = func;
 }
 
 /**
  * Register function to a key when it's released
  */
-void EventHandler::registerKeyRelease(SDLKey key, callback func) {
+void EventHandler::registerKeyRelease(SDL_Keycode key, callback func) {
 	keyReleaseFunc[key] = func;
 }
 
 /**
  * Register a function to be spawned only once when pressing the key
  */
-void EventHandler::registerKeyOnce(SDLKey key, callback func) {
+void EventHandler::registerKeyOnce(SDL_Keycode key, callback func) {
 	keyFuncOnce[key] = func;
 }
 
@@ -130,7 +135,7 @@ void EventHandler::registerKeyOnce(SDLKey key, callback func) {
  * For now unregister all the possible variations
  * of the callbacks.
  */
-void EventHandler::unregisterKey(SDLKey key) {
+void EventHandler::unregisterKey(SDL_Keycode key) {
 	keyFunc[key]        = NULL;
 	keyReleaseFunc[key] = NULL;
 	keyFuncOnce[key]    = NULL;
