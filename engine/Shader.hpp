@@ -16,7 +16,7 @@ class Shader {
 
 	private:
 		static string loadShaderFile(string file);
-		static void compileShader(GLuint shaderID, string shaderCode) throw (logic_error);
+		static void compileShader(GLuint shaderID, string shaderCode);
 		static void checkShader(GLuint) throw (logic_error);
 		static void checkProgram(GLuint) throw (logic_error);
 };

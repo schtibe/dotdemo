@@ -6,10 +6,8 @@
 #include <GL/glew.h>
 #include <GL/gl.h>
 #include <GL/glx.h>
-#include <boost/container/vector.hpp>
 
 #include "engine/Engine.hpp"
-#include "Dot.hpp"
 
 
 class Demo {
@@ -18,8 +16,10 @@ class Demo {
 		void renderFunc(GLuint time, Engine engine);
 	
 	private:
-		boost::container::vector<Dot> dots;
 		GLuint dotAmount;
+		GLuint shader;
+		GLuint s_time;
+		GLuint s_amount;
 };
 
 

@@ -1,34 +1,24 @@
 #include "Demo.hpp"
 
-#include <cmath>
-#include <glm/glm.hpp>
+#include "engine/Shader.hpp"
 
 using namespace glm;
 
 Demo::Demo() {
 	dotAmount = 42;
-	vec3 unit(0.0, 1.0, 0.0);
-	GLfloat step = 2 * M_PI / dotAmount;
 
 	glEnable(GL_PROGRAM_POINT_SIZE);
 
-	for (GLuint i = 0; i < dotAmount; i++) {
-		GLfloat angle = -(i * step);
-		mat3 rot(
-				cos(angle), -sin(angle), 0,
-				sin(angle),  cos(angle), 0,
-				0, 0, 1
-		);
-
-		vec3 direction = rot * unit;
-
-		dots.push_back(Dot(i, dotAmount, direction));
-	}
+	shader = Shader::loadShaders("dot.vert", "dot.frag");
+	s_time = glGetUniformLocation(shader, "time");
+	s_amount = glGetUniformLocation(shader, "amount");
 }
 
 void Demo::renderFunc(GLuint time, Engine engine) {
-	for (GLuint i = 0; i < dots.size(); i++) {
-		engine.doPhysics(dots.at(i));
-		engine.drawObject(dots.at(i));
-	}
+	glUseProgram(shader);
+
+	glUniform1ui(s_time, time);
+	glUniform1ui(s_amount, dotAmount);
+
+	glDrawArrays(GL_POINTS, 0, dotAmount);
 }

@@ -25,12 +25,22 @@ GLuint Shader::generateShaders(string vertexShader, string fragmentShader) {
 
 	try {
 		compileShader(vertexShaderID, vertexShader);
+	}
+	catch (logic_error &err) {
+		//std::cout <<  vertexShader << std::endl;
+		throw logic_error(
+			"Vertex Shader compilation error:" +
+			string(err.what())
+		);
+	}
+
+	try {
 		compileShader(fragmentShaderID, fragmentShader);
 	}
 	catch (logic_error &err) {
-		std::cout <<  vertexShader << std::endl;
+		//std::cout <<  vertexShader << std::endl;
 		throw logic_error(
-			"Shader compilation error:" +
+			"FragmentShader compilation error:" +
 			string(err.what())
 		);
 	}
@@ -61,23 +71,13 @@ GLuint Shader::loadShaders(string vertexShaderFile, string fragmentShaderFile) {
 	string vertexShader   = loadShaderFile(vertexShaderFile);
 	string fragmentShader = loadShaderFile(fragmentShaderFile);
 
-	try {
-		return generateShaders(vertexShader, fragmentShader);
-	}
-	catch (logic_error &err) {
-		std::cout <<  vertexShader << std::endl;
-		throw logic_error(
-				"Shader \"" + vertexShaderFile + "\" compilation error: " +
-				string(err.what())
-		);
-
-	}
+	return generateShaders(vertexShader, fragmentShader);
 }
 
 /**
  * Compile a shader
  */
-void Shader::compileShader(GLuint shaderID, string shaderCode) throw (logic_error)  {
+void Shader::compileShader(GLuint shaderID, string shaderCode)  {
 	char const *sourcePointer = shaderCode.c_str();
 
 	glShaderSource(shaderID, 1, &sourcePointer, NULL);
@@ -98,6 +98,7 @@ void Shader::checkShader(GLuint shaderID) throw (logic_error) {
 	if (result != GL_TRUE) {
 		vector<char> errorMsg(logLength + 1);
 		glGetShaderInfoLog(shaderID, logLength, NULL, &errorMsg[0]);
+		std::cout << "error: " <<  errorMsg[0] << std::endl;
 		throw logic_error(
 				"Compile status: " + lexical_cast<string>(result) 
 				+ ", msg: " + &errorMsg[0]
@@ -110,13 +111,13 @@ void Shader::checkShader(GLuint shaderID) throw (logic_error) {
  */
 void Shader::checkProgram(GLuint programID) throw (logic_error)  {
 	GLint result = GL_FALSE;
-	GLint logLength;
+	GLint logLength = 1000;
 
 	glGetProgramiv(programID, GL_LINK_STATUS, &result);
 	glGetProgramiv(programID, GL_INFO_LOG_LENGTH, &logLength);
 	if (result != GL_TRUE) {
 		vector<char> errorMsg(logLength + 1);
-		glGetShaderInfoLog(programID, logLength, NULL, &errorMsg[0]);
+		glGetProgramInfoLog(programID, logLength, NULL, &errorMsg[0]);
 		throw logic_error(&errorMsg[0]);
 	}
 }

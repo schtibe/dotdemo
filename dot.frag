@@ -1,12 +1,11 @@
 #version 130
 
 
-varying vec3 position;
 varying float pointSize;
+flat in int dotNumber;
 
-uniform int number;
-uniform int time;
-uniform int amount;
+uniform uint time;
+uniform uint amount;
 
 /*
  * GLSL HSV to RGB+A conversion. Useful for many effects and shader debugging.
@@ -50,7 +49,7 @@ void main() {
 	distance.t = abs(0.5 - distance.t);
 
 	float step = 1.0 / amount;
-	float hue = number * step;
+	float hue = dotNumber * step;
 
 	hue -= time * 0.0001;
 
