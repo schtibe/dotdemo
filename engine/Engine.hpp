@@ -16,11 +16,12 @@
 
 using namespace std;
 
-
-
-class SDLException : public std::exception {
-
+enum engineFlags{
+	NONE     = 0x01,
+	SHOW_FPS = 0x02,
+	PRINT_VERSION = 0x04
 };
+
 
 class Engine;
 
@@ -29,11 +30,10 @@ typedef boost::function<void (GLuint, Engine)> render_func;
 class Engine {
 	public:
 		//static Engine& inst();
-		Engine(string name, GLuint scrW, GLuint scrH);
+		Engine(string name, GLuint scrW, GLuint scrH, int flags);
 
 		EventHandler& getEventHandler();
 
-		GLboolean isRunning();
 		void registerRenderFunc(render_func);
 		void run();
 
@@ -41,10 +41,6 @@ class Engine {
 		Camera cam;
 
 		void toggleDebugCamera();
-
-		void drawObject(DrawObject &obj);
-		void doPhysics(DrawObject &obj);
-
 	private:
 
 		//static Engine *instance;
@@ -53,6 +49,7 @@ class Engine {
 		GLuint scrW      = 1280;
 		GLuint scrH      = 1024;
 		GLuint clrDepth  = 24;
+		int flags;
 
 		GLuint currentTime = 0;
 
@@ -86,9 +83,6 @@ class Engine {
 		GLuint lastDraw;
 		GLuint timer;
 		void fps(GLuint time);
-
-		//Engine(Engine const& copy);            // Not Implemented
-		//Engine& operator=(Engine const& copy); // Not Implemented
 };
 
 #endif

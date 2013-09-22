@@ -1,7 +1,7 @@
 #version 130
 
 const float pi = 3.1415926;
-const float end = 4.5;
+const float end = 1.8;
 const float arms = 3;
 
 uniform uint amount;
@@ -28,10 +28,10 @@ void main() {
 
 	float B = (amount / arms) * 0.5;
 	
-	float startPos = pi / (amount / (arms * 2)) * number;
+	float startPos = pi / B * number;
 	float pos = sin(startPos + time * 0.002) * end / 2;
 
-	position = position + (position * ((end / B) * (end / 2 + pos)));
+	position = position + (position * (end * (end / 2 + pos)));
 
 	gl_PointSize = pointSize = 20.0;
 	gl_Position = gl_ModelViewProjectionMatrix * vec4(position, 1.0);

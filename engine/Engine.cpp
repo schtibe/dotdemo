@@ -6,20 +6,12 @@
 #include <SDL2/SDL.h>
 
 
-/*
-Engine& Engine::inst() {
-	static Engine instance;
-	return instance;
-}
-*/
-
-
-
-Engine::Engine(string name, GLuint scrW, GLuint scrH) :
+Engine::Engine(string name, GLuint scrW, GLuint scrH, int flags) :
 	cam(Camera(scrW, scrH)),
 	running(false),
 	scrW(scrW),
 	scrH(scrH),
+	flags(flags),
 	evHandler(EventHandler())
 {
 	initSDL(name);
@@ -30,11 +22,6 @@ Engine::Engine(string name, GLuint scrW, GLuint scrH) :
 
 EventHandler& Engine::getEventHandler() {
 	return evHandler;
-}
-
-
-GLboolean Engine::isRunning() {
-	return running;
 }
 
 void Engine::registerRenderFunc(render_func renderFunc) {
@@ -52,13 +39,13 @@ void Engine::render() {
 	evHandler.handle();
 	renderFunc(currentTime, *this);
 
-	fps(currentTime);
+	if (flags & engineFlags::SHOW_FPS) {
+		fps(currentTime);
+	}
+
+	handleErrors();
 
 	SDL_GL_SwapWindow(window);
-}
-
-void Engine::drawObject(DrawObject &obj) {
-	obj.draw(currentTime);
 }
 
 void Engine::fps(GLuint time) {
@@ -72,10 +59,6 @@ void Engine::fps(GLuint time) {
 		frameCounter = 0;
 	}
 	lastDraw = time;
-}
-
-void Engine::doPhysics(DrawObject &obj) {
-	obj.doPhysics(currentTime);
 }
 
 void Engine::run() {
@@ -92,7 +75,6 @@ void Engine::run() {
 /**
  * Initialize SDL
  *
- * @TODO Probably make exceptions instead of return values
  */
 void Engine::initSDL(string name) {
 
@@ -116,10 +98,11 @@ void Engine::initSDL(string name) {
  * Initialize OpenGL
  */
 void Engine::initOpenGL() {
-	cout << "Renderer: " << glGetString(GL_RENDERER) << endl;
-	cout << "Vendor: " << glGetString(GL_VENDOR) << endl;
-	cout << "Version: " << glGetString(GL_VERSION) << endl;
-	//cout << "Extensions: " << glGetString(GL_EXTENSIONS) << endl;
+	if (flags & PRINT_VERSION) {
+		cout << "Renderer: " << glGetString(GL_RENDERER) << endl;
+		cout << "Vendor: " << glGetString(GL_VENDOR) << endl;
+		cout << "Version: " << glGetString(GL_VERSION) << endl;
+	}
 
 	glShadeModel(GL_SMOOTH);
 	glEnable(GL_BLEND);
