@@ -17,9 +17,13 @@ class Demo {
 	
 	private:
 		GLuint dotAmount;
+		GLuint arms;
 		GLuint shader;
+
+
 		GLuint s_time;
 		GLuint s_amount;
+		GLuint s_arms;
 };
 
 
