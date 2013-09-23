@@ -10,7 +10,6 @@
 
 
 #include "EventHandler.hpp"
-#include "Camera.hpp"
 
 
 using namespace std;
@@ -38,9 +37,7 @@ class Engine {
 		void run();
 
 		void init(GLuint scrW, GLuint srcH);
-		Camera cam;
 
-		void toggleDebugCamera();
 	private:
 
 		//static Engine *instance;
@@ -65,17 +62,11 @@ class Engine {
 		void videoResize(SDL_Event &event);
 		void mouseMotion(SDL_Event &event);
 		void quit(SDL_Event &event);
-		void cameraForwardMovement(SDL_Event &event);
-		void cameraBackwardMovement(SDL_Event &event);
-		void cameraLeftMovement(SDL_Event &event);
-		void cameraRightMovement(SDL_Event &event);
 
 		SDL_Window *window;
 
 		void handleErrors();
 
-		bool debugCameraActive       = false;
-		GLfloat cameraSpeed          = 0.5;
 
 		render_func renderFunc;
 

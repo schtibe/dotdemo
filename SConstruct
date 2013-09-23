@@ -15,7 +15,6 @@ file_list = [
 	'main.cpp',
 	'engine/Engine.cpp',
 	'engine/EventHandler.cpp',
-	'engine/Camera.cpp',
 	'engine/Shader.cpp',
 	'Demo.cpp'
 ]
