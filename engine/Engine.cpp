@@ -80,11 +80,20 @@ void Engine::initSDL(string name) {
 
 	SDL_Init(SDL_INIT_EVERYTHING);
 
-	SDL_DisplayMode mode;
-	SDL_GetCurrentDisplayMode(0, &mode);
+	int sdlFlags = SDL_WINDOW_OPENGL;
 
-	scrW = mode.w;
-	scrH = mode.h;
+	if (flags & RUN_FULLSCREEN) {
+		SDL_DisplayMode mode;
+		SDL_GetCurrentDisplayMode(0, &mode);
+
+		scrW = mode.w;
+		scrH = mode.h;
+
+		sdlFlags = sdlFlags | SDL_WINDOW_FULLSCREEN;
+	}
+	else {
+		sdlFlags = sdlFlags | SDL_WINDOW_RESIZABLE;
+	}
 
 	window = SDL_CreateWindow(
 			name.c_str(), 

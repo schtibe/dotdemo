@@ -11,7 +11,6 @@
 
 #include "EventHandler.hpp"
 #include "Camera.hpp"
-#include "DrawObject.hpp"
 
 
 using namespace std;
@@ -19,7 +18,8 @@ using namespace std;
 enum engineFlags{
 	NONE     = 0x01,
 	SHOW_FPS = 0x02,
-	PRINT_VERSION = 0x04
+	PRINT_VERSION = 0x04,
+	RUN_FULLSCREEN = 0x08
 };
 
 

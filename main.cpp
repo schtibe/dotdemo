@@ -6,7 +6,7 @@
 
 
 int main(int argc, char**argv) {
-	Engine engine("dotdemo", 1024, 1024, PRINT_VERSION);
+	Engine engine("dotdemo", 1024, 1024, PRINT_VERSION | RUN_FULLSCREEN);
 
 	Demo *demo =  new Demo();
 
