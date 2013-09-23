@@ -1,11 +1,13 @@
 #version 130
 
+
 const float pi = 3.1415926;
 const float displacement = 1.8;
 
 uniform uint arms;
 uniform uint amount;
 uniform uint time;
+uniform mat4 MVP;
 
 varying float pointSize;
 
@@ -34,7 +36,7 @@ void main() {
 	position = position + (position * (displacement * (displacement / 2 + pos)));
 
 	gl_PointSize = pointSize = 20.0;
-	gl_Position = gl_ModelViewProjectionMatrix * vec4(position, 1.0);
+	gl_Position = MVP * vec4(position, 1.0);
 
 	dotNumber = number;
 }

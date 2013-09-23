@@ -6,7 +6,9 @@
 
 
 int main(int argc, char**argv) {
-	Engine engine("dotdemo", 1024, 1024, PRINT_VERSION | RUN_FULLSCREEN);
+	setenv("SDL_VIDEO_X11_NODIRECTCOLOR", "1", 1);
+
+	Engine engine("dotdemo", 1024, 1024, NONE);
 
 	Demo *demo =  new Demo();
 
