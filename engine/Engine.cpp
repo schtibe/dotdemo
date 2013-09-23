@@ -101,7 +101,7 @@ void Engine::initSDL(string name) {
 			SDL_WINDOWPOS_CENTERED,
 			scrW,
 			scrH,
-			SDL_WINDOW_FULLSCREEN | SDL_WINDOW_OPENGL
+			sdlFlags
 	);
 
 	SDL_GL_CreateContext(window);
