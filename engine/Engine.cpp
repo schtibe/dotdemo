@@ -78,7 +78,13 @@ void Engine::run() {
  */
 void Engine::initSDL(string name) {
 
-	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS);
+	SDL_Init(SDL_INIT_EVERYTHING);
+
+	SDL_DisplayMode mode;
+	SDL_GetCurrentDisplayMode(0, &mode);
+
+	scrW = mode.w;
+	scrH = mode.h;
 
 	window = SDL_CreateWindow(
 			name.c_str(), 
@@ -86,7 +92,7 @@ void Engine::initSDL(string name) {
 			SDL_WINDOWPOS_CENTERED,
 			scrW,
 			scrH,
-			SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL
+			SDL_WINDOW_FULLSCREEN | SDL_WINDOW_OPENGL
 	);
 
 	SDL_GL_CreateContext(window);
