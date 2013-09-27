@@ -4,24 +4,30 @@
 #include <boost/bind.hpp>
 #include <GL/glu.h>
 #include <SDL2/SDL.h>
+#include "Camera.hpp"
+
+#include "EventHandler.hpp"
 
 
 Engine::Engine(string name, GLuint scrW, GLuint scrH, int flags) :
-	running(false),
 	scrW(scrW),
 	scrH(scrH),
-	flags(flags),
-	evHandler(EventHandler())
+	running(false),
+	flags(flags)
 {
 	initSDL(name);
 	initOpenGL();
 	glewInit();
 	initEvents();
+
+	Camera::inst()->setRes(scrW, scrH);
+
+
+	EventHandler::inst()->registerMouseMotionCallback(
+			boost::bind(&Camera::mouseMotion, Camera::inst(), _1)
+		);
 }
 
-EventHandler& Engine::getEventHandler() {
-	return evHandler;
-}
 
 void Engine::registerRenderFunc(render_func renderFunc) {
 	this->renderFunc = renderFunc;
@@ -31,9 +37,9 @@ void Engine::render() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
 
-	currentTime = SDL_GetTicks();
+	GLuint currentTime = SDL_GetTicks();
 
-	evHandler.handle();
+	EventHandler::inst()->handle();
 	renderFunc(currentTime, *this);
 
 	if (flags & engineFlags::SHOW_FPS) {
@@ -101,7 +107,7 @@ void Engine::initSDL(string name) {
 			sdlFlags
 	);
 
-	SDL_GL_CreateContext(window);
+	context = SDL_GL_CreateContext(window);
 	atexit(SDL_Quit);
 }
 
@@ -120,33 +126,26 @@ void Engine::initOpenGL() {
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	glEnable(GL_POLYGON_SMOOTH);
-	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
-	glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST);
-	glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
-	glHint(GL_POINT_SMOOTH_HINT, GL_NICEST);
-
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-	glViewport(0,0,scrW, scrH);
 	glMatrixMode(GL_PROJECTION);
 
-	gluPerspective(45.0f,(GLfloat)scrW/(GLfloat)scrH, 1.0f, 150.0f);
 	glMatrixMode(GL_MODELVIEW); // Select The Modelview Matrix
 	glLoadIdentity();
 
 	glEnable(GL_DEPTH_TEST);
-
-
 }
 
 
 
 
 void Engine::initEvents() {
-	evHandler.registerVideoResizeCallback (boost::bind(&Engine::videoResize, this, _1));
-	evHandler.registerQuitCallback        (boost::bind(&Engine::quit, this, _1));
+	EventHandler::inst()->registerVideoResizeCallback (boost::bind(&Engine::videoResize, this, _1));
+	EventHandler::inst()->registerQuitCallback        (boost::bind(&Engine::quit, this, _1));
 
-	evHandler.registerKey(SDLK_ESCAPE, boost::bind(&Engine::quit, this, _1));
+	EventHandler::inst()->registerKey(SDL_SCANCODE_ESCAPE, boost::bind(&Engine::quit, this, _1));
+
+	EventHandler::inst()->registerKey(SDL_SCANCODE_D, boost::bind(&Camera::strideRight, Camera::inst(), _1));
+	//EventHandler::inst()->registerKey(SDLK_d, boost::bind(&Camera::stride, Camera::inst(), _1));
 }
 
 
@@ -154,18 +153,12 @@ void Engine::initEvents() {
  * Resize event
  */
 void Engine::videoResize(SDL_Event &event) {
-	scrH = event.window.data1;
-	scrW = event.window.data2;
+	scrW = event.window.data1;
+	scrH = event.window.data2;
 
+	Camera::inst()->setRes(scrW, scrH);
 }
 
-/**
- * Mouse motion event
- */
-void Engine::mouseMotion(SDL_Event &event) {
-	Sint16 mouseX = event.motion.x;
-	Sint16 mouseY = event.motion.y;
-}
 
 void Engine::quit(SDL_Event &event) {
 	running = false;

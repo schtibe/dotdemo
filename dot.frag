@@ -4,7 +4,7 @@
 varying float pointSize;
 flat in int dotNumber;
 
-uniform uint time;
+uniform uint he_time;
 uniform uint amount;
 
 vec3 hsv2rgb(vec3 c)
@@ -23,7 +23,7 @@ void main() {
 	float step = 1.0 / amount;
 	float hue = dotNumber * step;
 
-	hue -= time * 0.0001;
+	hue -= he_time * 0.0001;
 
 	vec3 color = hsv2rgb(vec3(hue, 1, 1));
 	

@@ -1,21 +1,25 @@
-#include "Engine.hpp"
 #include "EventHandler.hpp"
 
 // NOTE at the moment it is possible to
 // register several functions for the same key. Consider
 // restricting this
 
-/*
- * http://www.libsdl.org/docs/html/sdlevent.html
- */
 
-/**
- * Construct
- */
-EventHandler::EventHandler() {
-	//std::fill_n(keysHeld, sdlKeyAmount, false);
+#include <utility>
+#include <boost/foreach.hpp>
+
+EventHandler * EventHandler::instance = NULL;
+
+EventHandler * EventHandler::inst() {
+	if (!instance) {
+		instance = new EventHandler;
+	}
+
+	return instance;
 }
 
+#include <iostream>
+using namespace std;
 
 /**
  * Handle the events
@@ -31,15 +35,16 @@ void EventHandler::handle() {
 					break;
 				}
 			case SDL_QUIT:
+				cout << "quit event" << endl;
 				//quit(event);
 				break;
 			case SDL_KEYDOWN:
-				keyDown(event.key.keysym.sym);
-				keysHeld[event.key.keysym.sym] = true;
+				keyDown(event.key.keysym.scancode);
+				keysHeld[event.key.keysym.scancode] = true;
 				break;
 			case SDL_KEYUP:
-				keyUp(event.key.keysym.sym);
-				keysHeld[event.key.keysym.sym] = false;
+				keyUp(event.key.keysym.scancode);
+				keysHeld[event.key.keysym.scancode] = false;
 				break;
 			case SDL_MOUSEMOTION:
 				if (mouseMotion) {
@@ -74,7 +79,7 @@ void EventHandler::registerQuitCallback(callback func) {
 /**
  * Trigger the func on a key once
  */
-void EventHandler::keyDown(SDL_Keycode &key) {
+void EventHandler::keyDown(SDL_Scancode &key) {
 	if (keysHeld.find(key) != keysHeld.end()) {
 		if (!keysHeld[key]) {
 			if (keyFuncOnce[key]) {
@@ -87,7 +92,7 @@ void EventHandler::keyDown(SDL_Keycode &key) {
 /**
  * When a key is released, call the release function
  */
-void EventHandler::keyUp(SDL_Keycode &key) {
+void EventHandler::keyUp(SDL_Scancode &key) {
 	if (keyReleaseFunc[key]) {
 		keyReleaseFunc[key](event);
 	}
@@ -97,6 +102,15 @@ void EventHandler::keyUp(SDL_Keycode &key) {
  * When a key is held, call the associated function (if set)
  */
 void EventHandler::cycle() {
+	std::pair<SDL_Scancode, bool> i;
+
+	BOOST_FOREACH(i, keysHeld) {
+		if (i.second) {
+			keyFunc[i.first];
+		}
+	}
+
+	/*
 	for (unsigned int i = 0; i < sdlKeyAmount; i++) {
 		if (keysHeld[i]) {
 			if (keyFunc[i]) {
@@ -104,6 +118,7 @@ void EventHandler::cycle() {
 			}
 		}
 	}
+	*/
 }
 
 
@@ -111,21 +126,21 @@ void EventHandler::cycle() {
 /**
  * Register a key to the list
  */
-void EventHandler::registerKey(SDL_Keycode key, callback func) {
+void EventHandler::registerKey(SDL_Scancode key, callback func) {
 	keyFunc[key] = func;
 }
 
 /**
  * Register function to a key when it's released
  */
-void EventHandler::registerKeyRelease(SDL_Keycode key, callback func) {
+void EventHandler::registerKeyRelease(SDL_Scancode key, callback func) {
 	keyReleaseFunc[key] = func;
 }
 
 /**
  * Register a function to be spawned only once when pressing the key
  */
-void EventHandler::registerKeyOnce(SDL_Keycode key, callback func) {
+void EventHandler::registerKeyOnce(SDL_Scancode key, callback func) {
 	keyFuncOnce[key] = func;
 }
 
@@ -135,7 +150,7 @@ void EventHandler::registerKeyOnce(SDL_Keycode key, callback func) {
  * For now unregister all the possible variations
  * of the callbacks.
  */
-void EventHandler::unregisterKey(SDL_Keycode key) {
+void EventHandler::unregisterKey(SDL_Scancode key) {
 	keyFunc[key]        = NULL;
 	keyReleaseFunc[key] = NULL;
 	keyFuncOnce[key]    = NULL;

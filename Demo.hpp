@@ -24,7 +24,9 @@ class Demo {
 		GLuint s_time;
 		GLuint s_amount;
 		GLuint s_arms;
-		GLuint s_mvp;
+		GLuint s_projection;
+		GLuint s_view;
+		GLuint s_mouse;
 };
 
 

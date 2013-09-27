@@ -8,8 +8,7 @@
 #include <SDL2/SDL.h>
 #include <string>
 
-
-#include "EventHandler.hpp"
+#include <boost/function.hpp>
 
 
 using namespace std;
@@ -31,26 +30,22 @@ class Engine {
 		//static Engine& inst();
 		Engine(string name, GLuint scrW, GLuint scrH, int flags);
 
-		EventHandler& getEventHandler();
-
 		void registerRenderFunc(render_func);
 		void run();
 
 		void init(GLuint scrW, GLuint srcH);
 
+
 	private:
 
+		GLuint scrW      = 1280;
+		GLuint scrH      = 1024;
 		//static Engine *instance;
 
 		GLboolean running;
-		GLuint scrW      = 1280;
-		GLuint scrH      = 1024;
 		GLuint clrDepth  = 24;
 		int flags;
 
-		GLuint currentTime = 0;
-
-		EventHandler evHandler;
 
 		void initSDL(string name);
 		void initOpenGL();
@@ -60,10 +55,10 @@ class Engine {
 
 		// events
 		void videoResize(SDL_Event &event);
-		void mouseMotion(SDL_Event &event);
 		void quit(SDL_Event &event);
 
 		SDL_Window *window;
+		SDL_GLContext  context;
 
 		void handleErrors();
 

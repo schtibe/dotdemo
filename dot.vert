@@ -6,12 +6,35 @@ const float displacement = 1.8;
 
 uniform uint arms;
 uniform uint amount;
-uniform uint time;
-uniform mat4 MVP;
+
+uniform uint he_time;
+uniform mat4 he_projection;
+uniform mat4 he_view;
+uniform vec2 he_mouse;
 
 varying float pointSize;
 
 flat out int dotNumber;
+
+mat4 view() {
+	float xAngle = -he_mouse.y * 0.002;
+	float yAngle = he_mouse.x * 0.002;
+	mat4 rotX = mat4(
+			1, 0, 0, 0,
+			0, cos(xAngle), -sin(xAngle),  0,
+			0, sin(xAngle), cos(xAngle),  0,
+			0, 0, 0, 1
+	);
+
+	mat4 rotY = mat4(
+		cos(yAngle), sin(yAngle), 0, 0,
+		0, 1, 0, 0,
+		sin(yAngle), 0, cos(yAngle), 0,
+		0, 0, 0, 1
+	);
+
+	return rotX * rotY * he_view;
+}
 
 
 void main() {
@@ -31,12 +54,12 @@ void main() {
 	float B = (amount / arms) * 0.5;
 	
 	float startPos = pi / B * number;
-	float pos = sin(startPos + time * 0.002) * displacement / 2;
+	float pos = sin(startPos + he_time * 0.002) * displacement / 2;
 
 	position = position + (position * (displacement * (displacement / 2 + pos)));
 
 	gl_PointSize = pointSize = 20.0;
-	gl_Position = MVP * vec4(position, 1.0);
+	gl_Position = he_projection * view() * vec4(position, 1.0);
 
 	dotNumber = number;
 }

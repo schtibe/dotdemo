@@ -3,7 +3,6 @@
 
 #include <SDL2/SDL.h>
 #include <boost/function.hpp>
-#include <map>
 #include <boost/container/map.hpp>
 
 //using std::map;
@@ -13,8 +12,7 @@ typedef boost::function<void (SDL_Event&)> callback;
 
 class EventHandler {
 	public:
-		EventHandler();
-
+		static EventHandler *inst();
 		void handle();
 
 		void registerVideoResizeCallback(callback);
@@ -22,16 +20,22 @@ class EventHandler {
 		void registerQuitCallback(callback);
 
 
-		void registerKey(SDL_Keycode key        , callback);
-		void registerKeyOnce(SDL_Keycode key    , callback);
-		void registerKeyRelease(SDL_Keycode key , callback);
+		void registerKey(SDL_Scancode key        , callback);
+		void registerKeyOnce(SDL_Scancode key    , callback);
+		void registerKeyRelease(SDL_Scancode key , callback);
 
-		void unregisterKey(SDL_Keycode key);
+		void unregisterKey(SDL_Scancode key);
 
 		void unregisterMouseMotion();
 
 
 	private:
+		static EventHandler *instance;
+
+		EventHandler() {};
+		EventHandler(EventHandler&) {}
+		EventHandler & operator=(EventHandler const&);
+		~EventHandler();
 		static const unsigned int sdlKeyAmount = 1000;
 
 		SDL_Event event;
@@ -39,18 +43,18 @@ class EventHandler {
 		void actualHandle(SDL_Event &);
 		void handleKeys(SDL_Event &event);
 		void cycle();
-		void keyDown(SDL_Keycode &);
-		void keyUp(SDL_Keycode &);
+		void keyDown(SDL_Scancode &);
+		void keyUp(SDL_Scancode &);
 
-		map<SDL_Keycode, bool> keysHeld;
+		map<SDL_Scancode, bool> keysHeld;
 
 		callback videoResize;
 		callback mouseMotion;
 		callback quit;
 
-		map<SDL_Keycode, callback> keyFunc;
-		map<SDL_Keycode, callback> keyReleaseFunc;
-		map<SDL_Keycode, callback> keyFuncOnce;
+		map<SDL_Scancode, callback> keyFunc;
+		map<SDL_Scancode, callback> keyReleaseFunc;
+		map<SDL_Scancode, callback> keyFuncOnce;
 
 
 };
