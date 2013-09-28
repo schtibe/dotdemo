@@ -17,6 +17,7 @@ Demo::Demo() {
 						 vec3(0, 1, 0));
 
 	glEnable(GL_PROGRAM_POINT_SIZE);
+	glEnable(GL_POINT_SPRITE);
 
 	shader = Shader::loadShaders("dot.vert", "dot.frag");
 	

@@ -13,6 +13,7 @@ uniform mat4 he_view;
 uniform vec2 he_mouse;
 
 out float pointSize;
+out vec4  pointPos;
 
 flat out int dotNumber;
 
@@ -60,9 +61,10 @@ void main() {
 
 	position = position + (position * (displacement * (displacement / 2 + pos)));
 
+	dotNumber = number;
+
 	gl_PointSize = pointSize = 20.0;
 	gl_Position = he_projection * view() * vec4(position, 1.0);
-	gl_Position = vec4(0, 0, 0, 1);
+	pointPos = gl_Position;
 
-	dotNumber = number;
 }

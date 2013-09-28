@@ -1,13 +1,13 @@
 #version 130
 
-
 out float pointSize;
 flat in int dotNumber;
 
 uniform uint he_time;
 uniform uint amount;
 
-out vec4 gl_FragColor;
+out vec4 out_color;
+in vec4  pointPos;
 
 vec3 hsv2rgb(vec3 c)
 {
@@ -29,10 +29,11 @@ void main() {
 
 	vec3 color = hsv2rgb(vec3(hue, 1, 1));
 	
-	float alpha = 1 - (2 * length(distance));
+	float len = sqrt(pow(distance.s, 2) + pow(distance.t, 2));
+
+	float alpha = 1.0 - (2.0 * len);
 	if (alpha < 0.1) {
 		discard;
 	}
-	gl_FragColor = vec4(color.xyz, alpha);
-	gl_FragColor = vec4(1.0, 0.0, .0, alpha);
+	out_color = vec4(color.xyz, alpha);
 }
