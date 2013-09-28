@@ -38,13 +38,11 @@ class EventHandler {
 		~EventHandler();
 		static const unsigned int sdlKeyAmount = 1000;
 
-		SDL_Event event;
-
 		void actualHandle(SDL_Event &);
 		void handleKeys(SDL_Event &event);
 		void cycle();
-		void keyDown(SDL_Scancode &);
-		void keyUp(SDL_Scancode &);
+		void keyDown(SDL_Scancode &, SDL_Event &);
+		void keyUp(SDL_Scancode &, SDL_Event &);
 
 		map<SDL_Scancode, bool> keysHeld;
 

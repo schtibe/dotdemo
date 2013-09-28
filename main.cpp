@@ -8,7 +8,7 @@
 int main(int argc, char**argv) {
 	setenv("SDL_VIDEO_X11_NODIRECTCOLOR", "1", 1);
 
-	Engine engine("dotdemo", 1024, 1024, NONE);
+	Engine engine("dotdemo", 1024, 1024, SHOW_FPS | PRINT_VERSION);
 
 	Demo *demo =  new Demo();
 

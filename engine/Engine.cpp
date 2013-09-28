@@ -144,8 +144,8 @@ void Engine::initEvents() {
 
 	EventHandler::inst()->registerKey(SDL_SCANCODE_ESCAPE, boost::bind(&Engine::quit, this, _1));
 
-	EventHandler::inst()->registerKey(SDL_SCANCODE_D, boost::bind(&Camera::strideRight, Camera::inst(), _1));
-	//EventHandler::inst()->registerKey(SDLK_d, boost::bind(&Camera::stride, Camera::inst(), _1));
+	EventHandler::inst()->registerKey(SDL_SCANCODE_D, boost::bind(&Camera::stride, Camera::inst(), _1));
+	EventHandler::inst()->registerKey(SDL_SCANCODE_A, boost::bind(&Camera::stride, Camera::inst(), _1));
 }
 
 

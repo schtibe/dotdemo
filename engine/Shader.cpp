@@ -18,6 +18,10 @@ using std::logic_error;
 using boost::container::vector;
 using boost::lexical_cast;
 
+// TODO refactor this
+// it should be possible to not check the shaders
+// also, it seems that the error messages aren't correct
+
 
 GLuint Shader::generateShaders(string vertexShader, string fragmentShader) {
 	GLuint vertexShaderID   = glCreateShader(GL_VERTEX_SHADER);

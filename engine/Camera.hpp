@@ -18,7 +18,7 @@ class Camera {
 		void init(vec3, vec3, vec3);
 
 		void mouseMotion(SDL_Event &ev);
-		void strideRight(SDL_Event &ev);
+		void stride(SDL_Event &ev);
 		vec2 mouse();
 		vec2 stride();
 

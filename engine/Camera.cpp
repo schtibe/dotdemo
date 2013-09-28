@@ -67,7 +67,13 @@ vec2 Camera::mouse() {
 	return vec2(xMouseOffset, yMouseOffset);
 }
 
-void Camera::strideRight(SDL_Event &event) {
-	cout << "right" << endl;
-	strideOffset += 0.1;
+void Camera::stride(SDL_Event &event) {
+	if (event.key.keysym.scancode == SDL_SCANCODE_D) {
+		cout << "right" << endl;
+		strideOffset += 0.1;
+	}
+	else {
+		cout << "left" << endl;
+		strideOffset -= 0.1;
+	}
 }

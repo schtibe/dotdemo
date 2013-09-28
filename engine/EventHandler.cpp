@@ -25,6 +25,8 @@ using namespace std;
  * Handle the events
  */
 void EventHandler::handle() {
+	SDL_Event event;
+
 	while (SDL_PollEvent(&event)) {
 		switch (event.type) {
 			case SDL_WINDOWEVENT:
@@ -38,11 +40,11 @@ void EventHandler::handle() {
 				quit(event);
 				break;
 			case SDL_KEYDOWN:
-				keyDown(event.key.keysym.scancode);
+				keyDown(event.key.keysym.scancode, event);
 				keysHeld[event.key.keysym.scancode] = true;
 				break;
 			case SDL_KEYUP:
-				keyUp(event.key.keysym.scancode);
+				keyUp(event.key.keysym.scancode, event);
 				keysHeld[event.key.keysym.scancode] = false;
 				break;
 			case SDL_MOUSEMOTION:
@@ -78,7 +80,7 @@ void EventHandler::registerQuitCallback(callback func) {
 /**
  * Trigger the func on a key once
  */
-void EventHandler::keyDown(SDL_Scancode &key) {
+void EventHandler::keyDown(SDL_Scancode &key, SDL_Event &event) {
 	if (keysHeld.find(key) != keysHeld.end()) {
 		if (!keysHeld[key]) {
 			if (keyFuncOnce[key]) {
@@ -86,12 +88,16 @@ void EventHandler::keyDown(SDL_Scancode &key) {
 			}
 		}
 	}
+
+	if (keyFunc[key]) {
+		keyFunc[key](event);
+	}
 }
 
 /**
  * When a key is released, call the release function
  */
-void EventHandler::keyUp(SDL_Scancode &key) {
+void EventHandler::keyUp(SDL_Scancode &key, SDL_Event &event) {
 	if (keyReleaseFunc[key]) {
 		keyReleaseFunc[key](event);
 	}
@@ -103,11 +109,14 @@ void EventHandler::keyUp(SDL_Scancode &key) {
 void EventHandler::cycle() {
 	std::pair<SDL_Scancode, bool> i;
 
+	/*
 	BOOST_FOREACH(i, keysHeld) {
 		if (i.second) {
-			keyFunc[i.first];
+			cout << "Key press of " << i.first << endl;
+			keyFunc[i.first](event);
 		}
 	}
+	*/
 
 	/*
 	for (unsigned int i = 0; i < sdlKeyAmount; i++) {

@@ -12,7 +12,7 @@ uniform mat4 he_projection;
 uniform mat4 he_view;
 uniform vec2 he_mouse;
 
-varying float pointSize;
+out float pointSize;
 
 flat out int dotNumber;
 
@@ -51,15 +51,18 @@ void main() {
 
 	vec3 position = rot * unit;
 
-	float B = (amount / arms) * 0.5;
+	float a = amount / arms;
+	float B = a * 0.5;
 	
 	float startPos = pi / B * number;
-	float pos = sin(startPos + he_time * 0.002) * displacement / 2;
+	float he_timed = float(he_time) * 0.002;
+	float pos = sin(startPos + he_timed) * displacement / 2;
 
 	position = position + (position * (displacement * (displacement / 2 + pos)));
 
 	gl_PointSize = pointSize = 20.0;
 	gl_Position = he_projection * view() * vec4(position, 1.0);
+	gl_Position = vec4(0, 0, 0, 1);
 
 	dotNumber = number;
 }
