@@ -32,11 +32,10 @@ void EventHandler::handle() {
 					if (videoResize) {
 						videoResize(event);
 					}
-					break;
 				}
+				break;
 			case SDL_QUIT:
-				cout << "quit event" << endl;
-				//quit(event);
+				quit(event);
 				break;
 			case SDL_KEYDOWN:
 				keyDown(event.key.keysym.scancode);
