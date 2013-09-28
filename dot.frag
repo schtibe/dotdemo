@@ -7,7 +7,6 @@ uniform uint he_time;
 uniform uint amount;
 
 out vec4 out_color;
-in vec4  pointPos;
 
 vec3 hsv2rgb(vec3 c)
 {
