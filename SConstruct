@@ -17,7 +17,8 @@ file_list = [
 	'engine/EventHandler.cpp',
 	'engine/Shader.cpp',
 	'Demo.cpp',
-    'engine/Camera.cpp'
+    'engine/Camera.cpp',
+	'engine/glmUtils.cpp'
 ]
 
 flags = [
