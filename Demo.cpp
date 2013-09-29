@@ -6,6 +6,8 @@
 #include "engine/Shader.hpp"
 #include <string>
 
+#include "engine/glmUtils.hpp"
+
 using namespace glm;
 
 Demo::Demo() {
@@ -36,7 +38,6 @@ Demo::Demo() {
 	s_arms       = glGetUniformLocation(shader, "arms");
 	s_projection = glGetUniformLocation(shader, "he_projection");
 	s_view       = glGetUniformLocation(shader, "he_view");
-	s_mouse      = glGetUniformLocation(shader, "he_mouse");
 }
 
 void Demo::renderFunc(GLuint time, Engine engine) {
@@ -46,14 +47,11 @@ void Demo::renderFunc(GLuint time, Engine engine) {
 	glUniform1ui(s_amount, dotAmount);
 	glUniform1ui(s_arms, arms);
 
-
 	mat4 projection = Camera::inst()->projection();
 	mat4 view       = Camera::inst()->view();
-	vec2 mouse      = Camera::inst()->mouse();
 
 	glUniformMatrix4fv(s_projection , 1 , GL_FALSE , &projection[0][0]);
 	glUniformMatrix4fv(s_view       , 1 , GL_FALSE , &view[0][0]);
-	glUniform2f(s_mouse      , mouse.x, mouse.y);
 
 	glDrawArrays(GL_POINTS, 0, dotAmount);
 }

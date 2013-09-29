@@ -19,8 +19,6 @@ class Camera {
 
 		void mouseMotion(SDL_Event &ev);
 		void stride(SDL_Event &ev);
-		vec2 mouse();
-		vec2 stride();
 
 	private:
 		static Camera *instance;
@@ -39,7 +37,7 @@ class Camera {
 		GLint xMouseOffset;
 		GLint yMouseOffset;
 
-		GLint strideOffset;
+		GLfloat strideOffset;
 
 };
 

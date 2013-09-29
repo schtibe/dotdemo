@@ -26,7 +26,6 @@ class Demo {
 		GLuint s_arms;
 		GLuint s_projection;
 		GLuint s_view;
-		GLuint s_mouse;
 };
 
 

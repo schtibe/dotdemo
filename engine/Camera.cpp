@@ -3,6 +3,8 @@
 #include <iostream>
 #include <glm/gtc/matrix_transform.hpp>
 
+#include "glmUtils.hpp"
+
 using namespace std;
 
 Camera *Camera::instance = NULL;
@@ -58,22 +60,36 @@ mat4 Camera::view() {
 void Camera::mouseMotion(SDL_Event &event) {
 	Sint32 xRel = event.motion.xrel;
 	Sint32 yRel = event.motion.yrel;
+
+	float xAngle = yRel * 0.002;
+	float yAngle = -xRel * 0.002;
+
+	mat4 rotX = mat4(
+			1, 0, 0, 0,
+			0, cos(xAngle), -sin(xAngle),  0,
+			0, sin(xAngle), cos(xAngle),  0,
+			0, 0, 0, 1
+	);
+
+	mat4 rotY = mat4(
+		cos(yAngle), sin(yAngle), 0, 0,
+		0, 1, 0, 0,
+		sin(yAngle), 0, cos(yAngle), 0,
+		0, 0, 0, 1
+	);
 	
-	xMouseOffset += xRel;
-	yMouseOffset += yRel;
+	vec4 new_dir = rotX * rotY * vec4(direction - position, 1.0);
+
+	direction = position + vec3(new_dir);
 }
 
-vec2 Camera::mouse() {
-	return vec2(xMouseOffset, yMouseOffset);
-}
 
 void Camera::stride(SDL_Event &event) {
 	if (event.key.keysym.scancode == SDL_SCANCODE_D) {
-		cout << "right" << endl;
-		strideOffset += 0.1;
+		position.x += 0.1;
 	}
 	else {
-		cout << "left" << endl;
-		strideOffset -= 0.1;
+		position.x -= 0.1;
 	}
 }
+
