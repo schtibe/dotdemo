@@ -11,6 +11,12 @@
 #include <boost/function.hpp>
 
 
+#ifdef XSCREENSAVER
+#include<X11/X.h>
+#include<X11/Xlib.h>
+#endif
+
+
 using namespace std;
 
 enum engineFlags{
@@ -33,9 +39,7 @@ class Engine {
 		void registerRenderFunc(render_func);
 		void run();
 
-		void init(GLuint scrW, GLuint srcH);
 
-		void render();
 
 	private:
 
@@ -48,14 +52,20 @@ class Engine {
 		int flags;
 
 
-		void initSDL(string name);
 		void initOpenGL();
-		void initEvents();
+		void init(GLuint scrW, GLuint srcH);
+		void render();
+		void quit(SDL_Event &event);
 
 
 		// events
+#ifndef XSCREENSAVER
+		void initSDL(string name);
 		void videoResize(SDL_Event &event);
-		void quit(SDL_Event &event);
+		void initEvents();
+#else
+		void initXWindow();
+#endif
 
 		SDL_Window *window;
 		SDL_GLContext  context;
@@ -69,6 +79,17 @@ class Engine {
 		GLuint lastDraw;
 		GLuint timer;
 		void fps(GLuint time);
+
+#ifdef XSCREENSAVER
+		Display     *dpy;
+		Window      root;
+		Window win;
+		GLint       att[5] = {
+			GLX_RGBA, GLX_DEPTH_SIZE, 24, GLX_DOUBLEBUFFER, None
+		};
+		XVisualInfo *vi;
+		GLXContext  glc;
+#endif
 };
 
 #endif

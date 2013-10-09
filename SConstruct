@@ -37,6 +37,10 @@ elif ARGUMENTS.get('oSize', 0):
 else:
 	flags.extend(['-O3', '-mtune=native'])
 
+if ARGUMENTS.get('xscreensaver', 0):
+	libs.append('X11')
+	flags.append('-DXSCREENSAVER=1')
+
 # this is a little hack to use the path variable of
 # the user. I do this so the gcc wrapper colorgcc is used.
 env = {

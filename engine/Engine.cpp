@@ -5,16 +5,13 @@
 #include <GL/glu.h>
 #include <SDL2/SDL.h>
 #include "Camera.hpp"
-#include "vroot.h"
 
 #include "EventHandler.hpp"
 
-Display                 *dpy;
-Window                  root;
-Window win;
-GLint                   att[] = { GLX_RGBA, GLX_DEPTH_SIZE, 24, GLX_DOUBLEBUFFER, None };
-XVisualInfo             *vi;
-GLXContext              glc;
+
+#ifdef XSCREENSAVER
+#include "vroot.h"
+#endif
 
 
 Engine::Engine(string name, GLuint scrW, GLuint scrH, int flags) :
@@ -23,10 +20,16 @@ Engine::Engine(string name, GLuint scrW, GLuint scrH, int flags) :
 	running(false),
 	flags(flags)
 {
+#ifdef XSCREENSAVER
+	initXWindow();
+#else
 	initSDL(name);
+#endif
 	initOpenGL();
 	glewInit();
+#ifndef XSCREENSAVER
 	initEvents();
+#endif
 
 	Camera::inst()->setRes(scrW, scrH);
 
@@ -56,8 +59,11 @@ void Engine::render() {
 
 	handleErrors();
 
-	//SDL_GL_SwapWindow(window);
+#ifdef XSCREENSAVER
 	glXSwapBuffers(dpy, root);
+#else
+	SDL_GL_SwapWindow(window);
+#endif
 }
 
 void Engine::fps(GLuint time) {
@@ -84,16 +90,11 @@ void Engine::run() {
 	SDL_Quit();
 }
 
-/**
- * Initialize SDL
- *
- */
-void Engine::initSDL(string name) {
+#ifdef XSCREENSAVER
+void Engine::initXWindow() {
 
+	// we still need this for the time
 	SDL_Init(SDL_INIT_EVENTS);
-
-
-	/* open display */
 
 	if ( ! (dpy = XOpenDisplay("unix:0")) ) {
 		cerr << "cannot connect to X server\n\n" << endl;
@@ -101,14 +102,16 @@ void Engine::initSDL(string name) {
 	}
 
 	/* get root window */
-	//root = RootWindow(dpy, DefaultScreen(dpy));
-	root = DefaultRootWindow(dpy);
 	root = VirtualRootWindowOfScreen(DefaultScreenOfDisplay(dpy));
-	
-	win = XCreateSimpleWindow(dpy, root, 0, 0, 256, 256, 1,
-                                  BlackPixel(dpy, DefaultScreen(dpy)),
-                                  WhitePixel(dpy, DefaultScreen(dpy)));
 
+	XWindowAttributes attrs;
+	XGetWindowAttributes(dpy, root, &attrs);
+
+	scrW = attrs.width;
+	scrH = attrs.height;
+
+	Camera::inst()->setRes(scrW, scrH);
+	
 	/* get visual matching attr */
 	if( ! (vi = glXChooseVisual(dpy, 0, att)) ) {
 		cerr <<  "no appropriate visual found\n\n" << endl;
@@ -122,8 +125,17 @@ void Engine::initSDL(string name) {
 	}
 
 	glXMakeCurrent(dpy, root, glc);
+}
+#else
 
-	/*
+/**
+ * Initialize SDL
+ *
+ */
+void Engine::initSDL(string name) {
+
+	SDL_Init(SDL_INIT_EVENTS);
+
 	int sdlFlags = SDL_WINDOW_OPENGL;
 
 	if (flags & RUN_FULLSCREEN) {
@@ -149,9 +161,10 @@ void Engine::initSDL(string name) {
 	);
 
 	context = SDL_GL_CreateContext(window);
-	*/
 	atexit(SDL_Quit);
 }
+
+#endif
 
 
 /**
@@ -179,7 +192,7 @@ void Engine::initOpenGL() {
 
 
 
-
+#ifndef XSCREENSAVER
 void Engine::initEvents() {
 	EventHandler::inst()->registerVideoResizeCallback (boost::bind(&Engine::videoResize, this, _1));
 	EventHandler::inst()->registerQuitCallback        (boost::bind(&Engine::quit, this, _1));
@@ -200,6 +213,7 @@ void Engine::videoResize(SDL_Event &event) {
 
 	Camera::inst()->setRes(scrW, scrH);
 }
+#endif
 
 
 void Engine::quit(SDL_Event &event) {

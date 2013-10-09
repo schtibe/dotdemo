@@ -4,10 +4,6 @@
 #include "engine/Engine.hpp"
 #include "Demo.hpp"
 
-#include<X11/X.h>
-#include<X11/Xlib.h>
-
-
 
 int main(int argc, char**argv) {
 
@@ -23,6 +19,5 @@ int main(int argc, char**argv) {
 
 	//engine.toggleDebugCamera();
 	engine.run();
-
 
 }
