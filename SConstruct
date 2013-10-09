@@ -24,8 +24,6 @@ file_list = [
 flags = [
 	'-std=c++0x',
 	'-Wall',
-	'-isystem/home/sh/coding/xscreensaver-5.22/hacks/',
-	'-isystem/home/sh/coding/xscreensaver-5.22/utils/'
 ]
 
 vars = Variables()

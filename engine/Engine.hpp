@@ -34,7 +34,6 @@ class Engine {
 		void run();
 
 		void init(GLuint scrW, GLuint srcH);
-		void render();
 
 
 	private:
@@ -52,6 +51,7 @@ class Engine {
 		void initOpenGL();
 		void initEvents();
 
+		void render();
 
 		// events
 		void videoResize(SDL_Event &event);
