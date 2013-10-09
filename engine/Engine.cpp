@@ -5,8 +5,16 @@
 #include <GL/glu.h>
 #include <SDL2/SDL.h>
 #include "Camera.hpp"
+#include "vroot.h"
 
 #include "EventHandler.hpp"
+
+Display                 *dpy;
+Window                  root;
+Window win;
+GLint                   att[] = { GLX_RGBA, GLX_DEPTH_SIZE, 24, GLX_DOUBLEBUFFER, None };
+XVisualInfo             *vi;
+GLXContext              glc;
 
 
 Engine::Engine(string name, GLuint scrW, GLuint scrH, int flags) :
@@ -48,7 +56,8 @@ void Engine::render() {
 
 	handleErrors();
 
-	SDL_GL_SwapWindow(window);
+	//SDL_GL_SwapWindow(window);
+	glXSwapBuffers(dpy, root);
 }
 
 void Engine::fps(GLuint time) {
@@ -81,8 +90,40 @@ void Engine::run() {
  */
 void Engine::initSDL(string name) {
 
-	SDL_Init(SDL_INIT_EVERYTHING);
+	SDL_Init(SDL_INIT_EVENTS);
 
+
+	/* open display */
+
+	if ( ! (dpy = XOpenDisplay("unix:0")) ) {
+		cerr << "cannot connect to X server\n\n" << endl;
+		exit(1);
+	}
+
+	/* get root window */
+	//root = RootWindow(dpy, DefaultScreen(dpy));
+	root = DefaultRootWindow(dpy);
+	root = VirtualRootWindowOfScreen(DefaultScreenOfDisplay(dpy));
+	
+	win = XCreateSimpleWindow(dpy, root, 0, 0, 256, 256, 1,
+                                  BlackPixel(dpy, DefaultScreen(dpy)),
+                                  WhitePixel(dpy, DefaultScreen(dpy)));
+
+	/* get visual matching attr */
+	if( ! (vi = glXChooseVisual(dpy, 0, att)) ) {
+		cerr <<  "no appropriate visual found\n\n" << endl;
+		exit(1);
+	}
+
+		/* create a context using the root window */
+	if ( ! (glc = glXCreateContext(dpy, vi, NULL, GL_TRUE)) ){
+			cerr << "failed to create context\n\n" << endl;
+			exit(1);
+	}
+
+	glXMakeCurrent(dpy, root, glc);
+
+	/*
 	int sdlFlags = SDL_WINDOW_OPENGL;
 
 	if (flags & RUN_FULLSCREEN) {
@@ -108,6 +149,7 @@ void Engine::initSDL(string name) {
 	);
 
 	context = SDL_GL_CreateContext(window);
+	*/
 	atexit(SDL_Quit);
 }
 

@@ -8,7 +8,8 @@ libs = [
 	'GL',
 	'GLU',
 	'boost_system',
-	'GLEW'
+	'GLEW',
+	'X11'
 ]
 
 file_list = [

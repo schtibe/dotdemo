@@ -21,9 +21,10 @@ Demo::Demo() {
 	glEnable(GL_PROGRAM_POINT_SIZE);
 	glEnable(GL_POINT_SPRITE);
 
+	/*
 	shader = Shader::loadShaders("dot.vert", "dot.frag");
 	
-	/*
+	*/
 #include "dot_vert_string.cpp"
 #include "dot_frag_string.cpp"
 
@@ -31,7 +32,6 @@ Demo::Demo() {
 	string fragShader = string(dot_frag, dot_frag + dot_frag_len);
 	
 	shader = Shader::generateShaders(vertShader, fragShader);
-	*/
 
 	s_time       = glGetUniformLocation(shader, "he_time");
 	s_amount     = glGetUniformLocation(shader, "amount");
