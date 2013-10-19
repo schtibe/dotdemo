@@ -45,7 +45,8 @@ void Engine::registerRenderFunc(render_func renderFunc) {
 }
 
 void Engine::render() {
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glClear(GL_DEPTH_BUFFER_BIT);;
 	glLoadIdentity();
 
 	GLuint currentTime = SDL_GetTicks();
@@ -182,9 +183,8 @@ void Engine::initOpenGL() {
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-	glMatrixMode(GL_PROJECTION);
 
-	glMatrixMode(GL_MODELVIEW); // Select The Modelview Matrix
+	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
 	glEnable(GL_DEPTH_TEST);

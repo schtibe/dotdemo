@@ -57,6 +57,8 @@ env = Environment(
 )
 env.Command('dot_vert_string.cpp', 'dot.vert', 'xxd -i $SOURCE > $TARGET')
 env.Command('dot_frag_string.cpp', 'dot.frag', 'xxd -i $SOURCE > $TARGET')
+env.Command('poly_vert_string.cpp', 'poly.vert', 'xxd -i $SOURCE > $TARGET')
+env.Command('poly_frag_string.cpp', 'poly.frag', 'xxd -i $SOURCE > $TARGET')
 env.AppendUnique(CCFLAGS=flags)
 env.Program('dotdemo', file_list, LIBS=libs)
 

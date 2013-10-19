@@ -19,7 +19,10 @@ class Demo {
 		GLuint dotAmount;
 		GLuint arms;
 		GLuint shader;
+		GLuint polyShader;
+		GLuint polyBuffer;
 
+		bool mode;
 
 		GLuint s_time;
 		GLuint s_amount;
