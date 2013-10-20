@@ -34,10 +34,6 @@ class Camera {
 		vec3 direction;
 		vec3 up;
 
-		GLint xMouseOffset;
-		GLint yMouseOffset;
-
-		GLfloat strideOffset;
 
 };
 

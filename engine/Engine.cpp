@@ -20,6 +20,10 @@ Engine::Engine(string name, GLuint scrW, GLuint scrH, int flags) :
 	running(false),
 	flags(flags)
 {
+
+	Camera::inst()->setRes(scrW, scrH);
+
+
 #ifdef XSCREENSAVER
 	initXWindow();
 #else
@@ -31,12 +35,7 @@ Engine::Engine(string name, GLuint scrW, GLuint scrH, int flags) :
 	initEvents();
 #endif
 
-	Camera::inst()->setRes(scrW, scrH);
 
-
-	EventHandler::inst()->registerMouseMotionCallback(
-			boost::bind(&Camera::mouseMotion, Camera::inst(), _1)
-		);
 }
 
 
@@ -198,9 +197,6 @@ void Engine::initEvents() {
 	EventHandler::inst()->registerQuitCallback        (boost::bind(&Engine::quit, this, _1));
 
 	EventHandler::inst()->registerKey(SDL_SCANCODE_ESCAPE, boost::bind(&Engine::quit, this, _1));
-
-	EventHandler::inst()->registerKey(SDL_SCANCODE_D, boost::bind(&Camera::stride, Camera::inst(), _1));
-	EventHandler::inst()->registerKey(SDL_SCANCODE_A, boost::bind(&Camera::stride, Camera::inst(), _1));
 }
 
 
