@@ -5,9 +5,6 @@
 #include <boost/function.hpp>
 #include <boost/container/map.hpp>
 
-//using std::map;
-using boost::container::map;
-
 typedef boost::function<void (SDL_Event&)> callback;
 
 class EventHandler {
@@ -44,15 +41,15 @@ class EventHandler {
 		void keyDown(SDL_Scancode &, SDL_Event &);
 		void keyUp(SDL_Scancode &, SDL_Event &);
 
-		map<SDL_Scancode, bool> keysHeld;
+		boost::container::map<SDL_Scancode, bool> keysHeld;
 
 		callback videoResize;
 		callback mouseMotion;
 		callback quit;
 
-		map<SDL_Scancode, callback> keyFunc;
-		map<SDL_Scancode, callback> keyReleaseFunc;
-		map<SDL_Scancode, callback> keyFuncOnce;
+		boost::container::map<SDL_Scancode, callback> keyFunc;
+		boost::container::map<SDL_Scancode, callback> keyReleaseFunc;
+		boost::container::map<SDL_Scancode, callback> keyFuncOnce;
 
 
 };

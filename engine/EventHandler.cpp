@@ -1,5 +1,4 @@
 #include "EventHandler.hpp"
-
 // NOTE at the moment it is possible to
 // register several functions for the same key. Consider
 // restricting this
