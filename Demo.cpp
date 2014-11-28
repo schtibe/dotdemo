@@ -79,7 +79,7 @@ void Demo::renderFunc(GLuint time, Engine engine) {
 	mat4 projection = Camera::inst()->projection();
 	mat4 view       = Camera::inst()->view();
 
-	if (time - lastUpdate > 50) {
+	if (time - lastUpdate > 10) {
 		glUseProgram(polyShader);
 
 		glUniformMatrix4fv(sp_projection , 1 , GL_FALSE , &projection[0][0]);
