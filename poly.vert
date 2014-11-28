@@ -3,6 +3,8 @@
 uniform mat4 he_projection;
 uniform mat4 he_view;
 
+in vec3 position;
+
 void main() {
 	float scale = 10;
 
@@ -13,5 +15,5 @@ void main() {
 		0, 0, 0, 1
 	);
 
-	gl_Position = he_projection * he_view * scaler * gl_Vertex;
+	gl_Position = he_projection * he_view * scaler * vec4(position, 1);
 }
