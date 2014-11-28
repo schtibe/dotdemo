@@ -63,6 +63,9 @@ Demo::Demo() :
 	glGenBuffers(1, &polyBuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, polyBuffer);
 
+	sp_projection = glGetUniformLocation(polyShader, "he_projection");
+	sp_view       = glGetUniformLocation(polyShader, "he_view");
+
 	glBufferData(
 		GL_ARRAY_BUFFER,
 		sizeof(polyVertArray),
@@ -72,40 +75,42 @@ Demo::Demo() :
 }
 
 void Demo::renderFunc(GLuint time, Engine engine) {
-	if (mode) {
+
+		mat4 projection = Camera::inst()->projection();
+		mat4 view       = Camera::inst()->view();
+
 		glUseProgram(shader);
 
 		glUniform1ui(s_time, time);
 		glUniform1ui(s_amount, dotAmount);
 		glUniform1ui(s_arms, arms);
 
-		mat4 projection = Camera::inst()->projection();
-		mat4 view       = Camera::inst()->view();
-
 		glUniformMatrix4fv(s_projection , 1 , GL_FALSE , &projection[0][0]);
 		glUniformMatrix4fv(s_view       , 1 , GL_FALSE , &view[0][0]);
 
 		glDrawArrays(GL_POINTS, 0, dotAmount);
+
+		if (time - lastUpdate > 50) {
+			glUseProgram(polyShader);
+
+			glUniformMatrix4fv(sp_projection , 1 , GL_FALSE , &projection[0][0]);
+			glUniformMatrix4fv(sp_view       , 1 , GL_FALSE , &view[0][0]);
+
+			glEnableVertexAttribArray(0);
+			glBindBuffer(GL_ARRAY_BUFFER, polyBuffer);
+
+			glVertexAttribPointer(
+					0,
+					3,
+					GL_FLOAT,
+					GL_FALSE,
+					0,
+					BUFFER_OFFSET(0)
+			);
+
+			glDrawArrays(GL_TRIANGLES, 0, 6);
+
+			glDisableVertexAttribArray(0);
+			lastUpdate = time;
 	}
-	else {
-		glUseProgram(polyShader);
-
-		glEnableVertexAttribArray(0);
-		glBindBuffer(GL_ARRAY_BUFFER, polyBuffer);
-
-		glVertexAttribPointer(
-				0,
-				3,
-				GL_FLOAT,
-				GL_FALSE,
-				0,
-				BUFFER_OFFSET(0)
-		);
-
-		glDrawArrays(GL_TRIANGLES, 0, 6);
-
-		glDisableVertexAttribArray(0);
-	}
-
-	mode = !mode;
 }

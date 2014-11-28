@@ -34,7 +34,7 @@ void main() {
 	float B = a * 0.5;
 	
 	float startPos = pi / B * number;
-	float he_timed = float(he_time) * 0.002;
+	float he_timed = float(he_time) * 0.001;
 	float pos = sin(startPos + he_timed) * displacement / 2;
 
 	position = position + (position * (displacement * (displacement / 2 + pos)));

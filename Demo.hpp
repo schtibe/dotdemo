@@ -29,6 +29,10 @@ class Demo {
 		GLuint s_arms;
 		GLuint s_projection;
 		GLuint s_view;
+		GLuint sp_projection;
+		GLuint sp_view;
+
+		GLuint lastUpdate;
 };
 
 
