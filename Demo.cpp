@@ -76,41 +76,42 @@ Demo::Demo() :
 
 void Demo::renderFunc(GLuint time, Engine engine) {
 
-		mat4 projection = Camera::inst()->projection();
-		mat4 view       = Camera::inst()->view();
+	mat4 projection = Camera::inst()->projection();
+	mat4 view       = Camera::inst()->view();
 
-		glUseProgram(shader);
+	if (time - lastUpdate > 50) {
+		glUseProgram(polyShader);
 
-		glUniform1ui(s_time, time);
-		glUniform1ui(s_amount, dotAmount);
-		glUniform1ui(s_arms, arms);
+		glUniformMatrix4fv(sp_projection , 1 , GL_FALSE , &projection[0][0]);
+		glUniformMatrix4fv(sp_view       , 1 , GL_FALSE , &view[0][0]);
 
-		glUniformMatrix4fv(s_projection , 1 , GL_FALSE , &projection[0][0]);
-		glUniformMatrix4fv(s_view       , 1 , GL_FALSE , &view[0][0]);
+		glEnableVertexAttribArray(0);
+		glBindBuffer(GL_ARRAY_BUFFER, polyBuffer);
 
-		glDrawArrays(GL_POINTS, 0, dotAmount);
+		glVertexAttribPointer(
+				0,
+				3,
+				GL_FLOAT,
+				GL_FALSE,
+				0,
+				BUFFER_OFFSET(0)
+		);
 
-		if (time - lastUpdate > 50) {
-			glUseProgram(polyShader);
+		glDrawArrays(GL_TRIANGLES, 0, 6);
 
-			glUniformMatrix4fv(sp_projection , 1 , GL_FALSE , &projection[0][0]);
-			glUniformMatrix4fv(sp_view       , 1 , GL_FALSE , &view[0][0]);
-
-			glEnableVertexAttribArray(0);
-			glBindBuffer(GL_ARRAY_BUFFER, polyBuffer);
-
-			glVertexAttribPointer(
-					0,
-					3,
-					GL_FLOAT,
-					GL_FALSE,
-					0,
-					BUFFER_OFFSET(0)
-			);
-
-			glDrawArrays(GL_TRIANGLES, 0, 6);
-
-			glDisableVertexAttribArray(0);
-			lastUpdate = time;
+		glDisableVertexAttribArray(0);
+		lastUpdate = time;
 	}
+
+	glUseProgram(shader);
+
+	glUniform1ui(s_time, time);
+	glUniform1ui(s_amount, dotAmount);
+	glUniform1ui(s_arms, arms);
+
+	glUniformMatrix4fv(s_projection , 1 , GL_FALSE , &projection[0][0]);
+	glUniformMatrix4fv(s_view       , 1 , GL_FALSE , &view[0][0]);
+
+	glDrawArrays(GL_POINTS, 0, dotAmount);
+
 }
